@@ -1,0 +1,42 @@
+\documentclass{article}
+
+% All packages, macros and the abbreviation database live in separate files.
+\input{preamble}
+
+\title{
+  Wireless Local Area Networks\\
+  Mạng cục bộ không dây
+}
+\author{Tuấn}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  This document covers the definition and evolution of Wi-Fi, the spectrum and
+  channel plans, network architecture and deployment models, security and an
+  appendix with abbreviations and an English--Vietnamese terminology table.
+\end{abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\clearpage
+
+% ---------------- Main matter (one file per part) ----------------
+\input{sections/01_introduction}
+\input{sections/02_standards_spectrum}
+\input{sections/03_architecture}
+\input{sections/04_security}
+
+% ---------------- Appendices ----------------
+\appendix
+\input{sections/A_abbreviations}
+\input{sections/B_terminology}
+
+% ---------------- References ----------------
+\bibliographystyle{alpha}
+\bibliography{references}
+
+\end{document}

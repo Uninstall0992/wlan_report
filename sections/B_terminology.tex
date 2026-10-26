@@ -1,0 +1,169 @@
+% B_terminology.tex -- concise English--Vietnamese WLAN terminology
+% =====================================================================
+\section{English--Vietnamese Terminology}
+\label{app:terms}
+
+\begingroup
+\small
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}
+\newcommand{\catrow}[1]{%
+  \multicolumn{3}{@{}l@{}}{\textbf{\large #1}} \\*
+  \midrule
+}
+
+\begin{xltabular}{\linewidth}{@{} L{0.8} L{0.8} L{1.4} @{}}
+  \caption{Core English--Vietnamese WLAN terminology.}
+  \label{tab:terms}\\
+  \toprule
+  \textbf{English term (abbr.)} & \textbf{Tiếng Việt} & \textbf{Short
+  definition}\\
+  \midrule
+  \endfirsthead
+  \multicolumn{3}{@{}l}{\small\textsl{Table~\thetable\ (continued)}}\\
+  \toprule
+  \textbf{English term (abbr.)} & \textbf{Tiếng Việt} & \textbf{Short
+  definition}\\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{3}{r@{}}{\small\textsl{continued on next page}}\\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+
+  \catrow{Networks and architecture}
+  Local Area Network (LAN) & Mạng cục bộ & Network serving a limited geographic area\\
+  Wireless Local Area Network (WLAN) & Mạng cục bộ không dây & Local network
+  using radio instead of cables\\
+  Wi-Fi & Mạng không dây Wi-Fi & Wi-Fi Alliance brand for certified 802.11
+  products\\
+  Access Point (AP) & Điểm truy cập & Device that bridges wireless clients to a
+  wired network\\
+  Wireless station (STA) & Trạm không dây & Device with an 802.11 radio\\
+  Wireless LAN Controller (WLC) & Bộ điều khiển mạng không dây & Central manager
+  for lightweight APs\\
+  Basic Service Set (BSS) & Tập dịch vụ cơ bản & One AP and its associated
+  stations\\
+  BSS Identifier (BSSID) & Mã định danh BSS & Identifier, normally a MAC
+  address, for a BSS\\
+  Extended Service Set (ESS) & Tập dịch vụ mở rộng & Several BSSs sharing one
+  SSID\\
+  Service Set Identifier (SSID) & Tên mạng & Name advertised by a wireless
+  network\\
+  Association & Liên kết & Procedure by which a station joins an AP\\
+  Distribution System (DS) & Hệ thống phân phối & Backbone interconnecting APs\\
+  Roaming & Chuyển vùng & Moving between APs without losing connectivity\\
+  Power over Ethernet (PoE) & Cấp nguồn qua Ethernet & Power delivered over the
+  data cable\\
+  Virtual LAN (VLAN) & Mạng LAN ảo & Logical segmentation of a network\\
+
+  \catrow{Radio and physical layer}
+  Wireless medium & Môi trường truyền không dây & Shared radio path used to
+  exchange frames\\
+  Frequency & Tần số & Number of wave cycles per second\\
+  Band & Băng tần & Range of frequencies used by a radio system\\
+  Channel & Kênh & Portion of a band used by one network\\
+  Channel width & Độ rộng kênh & Spectrum occupied by a channel\\
+  ISM band & Băng tần công nghiệp, khoa học và y tế & Unlicensed band such as
+  2.4 GHz\\
+  Regulatory domain & Miền quản lý tần số & Country-specific channel and power
+  rules\\
+  Antenna gain & Độ lợi anten & Focusing ability of an antenna relative to
+  isotropic radiation\\
+  Transmit power & Công suất phát & Radio power output, commonly measured in
+  dBm\\
+  EIRP & Công suất bức xạ đẳng hướng tương đương & Transmit power plus antenna
+  gain minus cable loss\\
+  RSSI & Cường độ tín hiệu thu & Measure of received signal level\\
+  Signal-to-Noise Ratio (SNR) & Tỷ số tín hiệu trên nhiễu & Signal level
+  relative to background noise\\
+  Interference & Can nhiễu & Unwanted signal degrading reception\\
+  Path loss & Suy hao đường truyền & Loss of power over distance\\
+  Multipath & Đa đường & Signal arriving over several propagation paths\\
+  Fading & Pha-đinh & Rapid signal variation caused by propagation effects\\
+  Modulation & Điều chế & Encoding data onto a carrier wave\\
+  Coding rate & Tốc độ mã hóa & Fraction of transmitted bits carrying
+  information\\
+  MCS & Sơ đồ điều chế và mã hóa & Index selecting modulation and coding rate\\
+  OFDM & Ghép kênh phân chia theo tần số trực giao & Many orthogonal subcarriers
+  in one channel\\
+  OFDMA & Đa truy cập phân chia theo tần số trực giao & Subcarriers allocated to
+  different users\\
+  MIMO & Đa đầu vào đa đầu ra & Multiple antennas at transmitter and receiver\\
+  Beamforming & Tạo búp sóng & Focusing signal energy towards a client\\
+  Throughput & Thông lượng & Actual data delivered per second\\
+  Latency & Độ trễ & Time for data to travel from source to destination\\
+
+  \catrow{MAC and quality of service}
+  Medium Access Control (MAC) & Điều khiển truy cập môi trường truyền & Layer
+  arbitrating use of the shared channel\\
+  CSMA/CA & Đa truy cập tránh xung đột & Listen-before-talk access with random
+  backoff\\
+  Carrier sense & Cảm nhận sóng mang & Detecting whether the medium is busy\\
+  Backoff & Thời gian lùi & Random wait before transmitting\\
+  Contention Window (CW) & Cửa sổ tranh chấp & Range from which backoff is
+  chosen\\
+  Request to Send / Clear to Send (RTS/CTS) & Yêu cầu gửi / cho phép gửi &
+  Handshake reserving the channel\\
+  Network Allocation Vector (NAV) & Vectơ phân bổ mạng & Timer for virtual
+  carrier sensing\\
+  Frame & Khung & Basic MAC data unit transmitted over the air\\
+  Beacon & Khung báo hiệu & Periodic broadcast announcing a BSS\\
+  Authentication & Xác thực & Proving identity to the network\\
+  Association & Liên kết & Joining an AP\\
+  Acknowledgement (ACK) & Xác nhận & Frame confirming successful reception\\
+  Frame aggregation & Gộp khung & Combining several payloads in one
+  transmission\\
+  Quality of Service (QoS) & Chất lượng dịch vụ & Prioritising traffic classes\\
+  Access Category (AC) & Loại truy cập & Voice, video, best-effort or background
+  class\\
+  Power save mode & Chế độ tiết kiệm năng lượng & Radio sleeps between
+  transmissions\\
+  \catrow{Security}
+  Confidentiality & Tính bí mật & Data readable only by authorised parties\\
+  Integrity & Tính toàn vẹn & Data not altered undetected\\
+  Encryption & Mã hóa & Transforming data to an unreadable form\\
+  Wired Equivalent Privacy (WEP) & Bảo mật tương đương mạng có dây & Obsolete,
+  broken wireless protection\\
+  Wi-Fi Protected Access (WPA) & Truy cập Wi-Fi được bảo vệ & Family of Wi-Fi
+  security certifications\\
+  Advanced Encryption Standard (AES) & Chuẩn mã hóa nâng cao & Standard block
+  cipher used by WPA2/WPA3\\
+  Pre-Shared Key (PSK) & Khóa chia sẻ trước & Passphrase-based authentication\\
+  Simultaneous Authentication of Equals (SAE) & Xác thực đồng thời & WPA3
+  password-based key exchange\\
+  Protected Management Frames (PMF) & Khung quản lý được bảo vệ & Authenticated
+  management frames\\
+  Pairwise Master Key (PMK) & Khóa chủ theo cặp & Root key used to derive
+  session keys\\
+  Pairwise Transient Key (PTK) & Khóa tạm thời theo cặp & Session key for
+  unicast traffic\\
+  Extensible Authentication Protocol (EAP) & Giao thức xác thực mở rộng &
+  Framework carrying authentication methods\\
+  RADIUS & Dịch vụ xác thực người dùng từ xa & AAA protocol commonly used with
+  802.1X\\
+  Virtual Private Network (VPN) & Mạng riêng ảo & Encrypted tunnel over an
+  untrusted network\\
+  Rogue AP & AP trái phép & Unauthorised AP on the network\\
+  Evil twin & AP song sinh độc hại & Fake AP impersonating a legitimate SSID\\
+  Wireless Intrusion Prevention System (WIPS) & Hệ thống ngăn chặn xâm nhập
+  không dây & Detects and mitigates wireless attacks\\
+
+  \catrow{Deployment and operations}
+  Site survey & Khảo sát hiện trường & Measuring and modelling coverage on
+  site\\
+  Heat map & Bản đồ nhiệt & Map of signal or performance across an area\\
+  Coverage hole & Vùng lõm sóng & Area with inadequate signal\\
+  Capacity & Dung lượng & Total traffic the network can carry\\
+  Cell overlap & Độ chồng lấn ô & Overlap between neighbouring AP coverage
+  areas\\
+  Channel plan & Quy hoạch kênh & Assignment of channels to APs\\
+  Airtime & Thời gian chiếm kênh & Time a station uses the channel\\
+  Channel utilization & Mức sử dụng kênh & Percentage of time the channel is
+  busy\\
+  Retry rate & Tỷ lệ truyền lại & Percentage of frames retransmitted\\
+  Packet capture & Bắt gói tin & Recording frames for analysis\\
+  Monitor mode & Chế độ giám sát & Radio mode capturing frames on a channel\\
+  Firmware & Phần mềm điều khiển & Embedded software of a network device\\
+\end{xltabular}
+\endgroup

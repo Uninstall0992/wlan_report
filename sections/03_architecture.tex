@@ -1,0 +1,114 @@
+% =====================================================================
+% 03_architecture.tex
+% =====================================================================
+\begingroup
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}
+
+\section{WLAN Architecture and Components}
+\label{sec:arch}
+
+\subsection{Basic Building Blocks}
+
+\begin{description}[style=nextline]
+  \item[\acl{sta}] Any device with an 802.11 radio: laptop, phone, \ac{iot}
+        sensor or printer. A client \ac{sta} associates with an \ac{ap}.
+  \item[\acl{ap}] Bridges wireless clients to the wired \ac{lan}. An \ac{ap} may
+        host several virtual networks, each with its own \ac{ssid}.
+  \item[\acl{wlc}] Centralises configuration, \ac{rrm}, security policy and
+        roaming for many lightweight \acp{ap}.
+  \item[\acl{ds}] The (usually wired Ethernet) backbone that interconnects
+        \acp{ap} and provides access to servers and the Internet.
+  \item[\acl{poe}] Standards 802.3af (about 15~W), 802.3at (30~W) and 802.3bt
+        (60--90~W) power \acp{ap} over the Ethernet cable; modern Wi-Fi~6/7
+        \acp{ap} may need 802.3at or 802.3bt.
+\end{description}
+
+\subsection{Service Sets and Topologies}
+
+\begin{itemize}
+  \item \textbf{\ac{bss}:} one \ac{ap} and its associated stations. Identified
+        by the \ac{bssid}, normally the \ac{ap} radio's MAC address.
+  \item \textbf{\ac{ibss}:} an ad hoc peer-to-peer network without an \ac{ap}.
+  \item \textbf{\ac{ess}:} several \acp{bss} connected by a \ac{ds} and sharing
+        an \ac{ssid}, allowing roaming.
+  \item \textbf{Mesh \ac{bss}:} \acp{ap} forward traffic wirelessly to each
+        other (802.11s or vendor mesh); only some nodes need a wired uplink.
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+      node distance=1.5cm and 1.0cm,
+      ap/.style={draw,rounded corners,fill=blue!10,minimum width=2.4cm,minimum
+        height=0.8cm,font=\small},
+      sta/.style={draw,circle,fill=green!10,minimum
+        size=0.9cm,font=\scriptsize},
+      ds/.style={draw,fill=orange!15,minimum width=7.5cm,minimum
+        height=0.7cm,font=\small}
+    ]
+    \node[ds] (ds) {Distribution System (wired LAN)};
+
+    \node[ap, below left=1.2cm and 0.5cm of ds.center] (ap1) {AP$_1$};
+    \node[ap, below right=1.2cm and 0.5cm of ds.center] (ap2) {AP$_2$};
+
+    \node[sta, below left=1.0cm and 0.8cm of ap1] (s1) {STA};
+    \node[sta, below right=1.0cm and 0.8cm of ap1] (s2) {STA};
+    \node[sta, below left=1.0cm and 0.8cm of ap2] (s3) {STA};
+    \node[sta, below right=1.0cm and 0.8cm of ap2] (s4) {STA};
+
+    \draw (ap1.north) -- (ap1.north |- ds.south);
+    \draw (ap2.north) -- (ap2.north |- ds.south);
+
+    \foreach \s in {s1,s2}{\draw[dashed] (\s) -- (ap1);}
+    \foreach \s in {s3,s4}{\draw[dashed] (\s) -- (ap2);}
+
+    \draw[dashed,blue!60] ([yshift=-1.0cm]ap1.center) ellipse (2.6cm and 1.9cm);
+    \draw[dashed,blue!60] ([yshift=-1.0cm]ap2.center) ellipse (2.6cm and 1.9cm);
+
+    \node[font=\scriptsize,blue!60!black,below=1.7cm of ap1] {BSS$_1$};
+    \node[font=\scriptsize,blue!60!black,below=1.7cm of ap2] {BSS$_2$};
+  \end{tikzpicture}
+  \caption{
+    An Extended Service Set: two BSSs joined by a wired distribution system.
+  }
+  \label{fig:ess}
+\end{figure}
+
+\subsection{Deployment Models}
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Common WLAN deployment models.}
+  \label{tab:deployment-models}
+  \begin{tabularx}{\linewidth}{@{} L{0.8} L{0.8} L{0.8} L{1.3} L{1.3} @{}}
+    \toprule
+    \textbf{Model}                     & \textbf{Control plane}    & \textbf{Data plane}                        & \textbf{Strengths}                   & \textbf{Weaknesses}                   \\
+    \midrule
+    Autonomous (standalone) \acp{ap}   & Each \ac{ap}              & Local switching                            & Simple, cheap for 1--3 \acp{ap}      & Hard to scale and manage consistently \\
+    Controller-based (central)         & \acs{wlc}                 & Tunnelled to \acs{wlc} via \acs{capwap}    & Central policy, easy L3 roaming      & Controller can be a bottleneck        \\
+    Controller-based (local switching) & \acs{wlc}                 & Local at \ac{ap} (e.g.\ FlexConnect-style) & Good for branches, survives WAN loss & More complex VLAN design              \\
+    Cloud-managed                      & Cloud service             & Local at \ac{ap}                           & Zero-touch provisioning, analytics   & Management depends on Internet        \\
+    Mesh                               & Distributed or controller & Multi-hop wireless                         & No cabling to every \ac{ap}          & Throughput drops per hop              \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+In controller-based designs, \ac{capwap} \cite{rfc5415, rfc5416} carries control
+messages (UDP port 5246, protected by DTLS) and optionally client data (UDP port
+5247) between lightweight \acp{ap} and the \ac{wlc}.
+
+\subsection{Network Services Around the WLAN}
+
+\begin{itemize}
+  \item \textbf{VLANs and SSIDs:} each \ac{ssid} is normally mapped to a
+        \ac{vlan} (corporate, guest, voice, \ac{iot}) so traffic can be
+        segmented and policed.
+  \item \textbf{DHCP and DNS:} must be sized for the peak number of clients and
+        short lease times in guest networks.
+  \item \textbf{RADIUS:} authentication, authorisation and accounting for 802.1X
+        (Section~\ref{sec:security}).
+  \item \textbf{Layer-2 vs Layer-3 roaming:} within one subnet a client keeps
+        its IP address; across subnets a controller either tunnels traffic to an
+        anchor or the client renews its address.
+\end{itemize}
+\endgroup

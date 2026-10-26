@@ -1,0 +1,76 @@
+% =====================================================================
+% 01_introduction.tex
+% =====================================================================
+\begingroup
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{What Is a WLAN?}
+
+A \ac{wlan} is a data network that connects devices over a radio-frequency
+medium instead of cables, typically inside a home, an office floor, a campus or
+a public venue. Modern \acp{wlan} are almost exclusively built on the \ac{ieee}
+802.11 family of standards, which define the \ac{phy} and \ac{mac} layers
+\cite{ieee80211_2020}.
+
+\subsection{LAN and WLAN}
+
+A LAN connects devices within a limited area, usually using switched Ethernet
+and physical cables. A WLAN provides the same local-network function over a
+shared wireless medium, giving users mobility and easier deployment but making
+performance more sensitive to distance, interference and obstacles. A WLAN
+normally connects to the rest of the LAN through an access point.
+
+\subsection{WLAN Compared with Other Wireless Networks}
+
+Wireless networks are commonly classified by coverage area
+(Table~\ref{tab:wireless-classes}). \acp{wlan} sit between short-range personal
+networks and wide-area cellular networks.
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Classes of wireless networks (typical values).}
+  \label{tab:wireless-classes}
+  \begin{tabularx}{\linewidth}{@{} L{0.8} L{0.9} L{0.9} L{1.2} L{1.2} @{}}
+    \toprule
+    \textbf{Class} & \textbf{Typical range} & \textbf{Examples} & \textbf{Spectrum}        & \textbf{Typical use}         \\
+    \midrule
+    \ac{wpan}      & up to about 10~m       & Bluetooth         & Unlicensed (2.4~GHz)     & Headsets, sensors, wearables \\
+    \acs{wlan}     & tens of metres indoors & Wi-Fi (802.11)    & Unlicensed 2.4, 5, 6~GHz & Homes, offices, campuses     \\
+    Wireless MAN   & several kilometres     & WiMAX (802.16)    & Licensed and unlicensed  & Fixed broadband, backhaul    \\
+    \ac{wwan}      & kilometres per cell    & LTE               & Licensed                 & Mobile broadband, voice      \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Advantages and Limitations}
+
+In normal use, a station associates with an access point and exchanges frames
+over the shared wireless medium. This model is used in homes, offices, campuses,
+public hotspots and temporary networks where mobility or avoiding new cabling is
+important.
+
+\begin{itemize}
+  \item \textbf{Advantages:}
+        \begin{itemize}
+          \item \textbf{Mobility and convenience:} users keep connectivity while
+                moving between rooms or buildings.
+          \item \textbf{Fast, low-cost deployment:} no cable pulling; ideal for
+                temporary sites, heritage buildings and dense venues.
+          \item \textbf{Scalability:} capacity grows by adding \acp{ap} and
+                channels.
+        \end{itemize}
+  \item \textbf{Disadvantages:}
+        \begin{itemize}
+          \item \textbf{Shared medium:} all stations in range of the same
+                channel share its airtime, so capacity is lower and less
+                predictable than switched Ethernet.
+          \item \textbf{Interference and propagation effects:} walls,
+                reflections and other radios degrade performance.
+          \item \textbf{Security exposure:} radio signals leave the building, so
+                strong encryption and authentication are mandatory.
+        \end{itemize}
+\end{itemize}
+\endgroup

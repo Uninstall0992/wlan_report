@@ -1,0 +1,191 @@
+% =====================================================================
+% 06_security.tex
+% =====================================================================
+\begingroup
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}
+
+\section{WLAN Security}
+\label{sec:security}
+
+\subsection{Why Wireless Needs Strong Security}
+
+Anyone within radio range can capture frames. A secure \ac{wlan} must therefore
+provide \emph{confidentiality} (encryption), \emph{integrity} (tamper
+detection), \emph{authentication} (who is connecting, and to what) and
+\emph{availability} (resistance to jamming and management-frame attacks).
+
+\subsection{Generations of Wi-Fi Security}
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Generations of WLAN security.}
+  \label{tab:security-evolution}
+  \begin{tabularx}{\linewidth}{@{} L{0.5} L{0.3} L{1.0} L{2.2} @{}}
+    \toprule
+    \textbf{Mechanism} & \textbf{Year} & \textbf{Cipher / key management}                                          & \textbf{Status}                                                                   \\
+    \midrule
+    \acs{wep}          & 1997          & RC4, 24-bit IV, static key                                                & Broken; keys recoverable in minutes \cite{fms2001}. Never use.                    \\
+    \acs{wpa}          & 2003          & RC4 with \acs{tkip}, \acs{psk} or 802.1X                                  & Deprecated interim fix.                                                           \\
+    WPA2               & 2004          & \acs{aes}-\acs{ccmp}, \acs{psk} or 802.1X                                 & Widely deployed; offline guessing of weak passphrases and \acs{krack}-type flaws. \\
+    WPA3               & 2018          & \acs{aes}-\acs{ccmp}/\acs{gcmp}, \acs{sae} or 802.1X, mandatory \acs{pmf} & Current recommendation \cite{wpa3spec}.                                           \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{WPA2 and the 4-Way Handshake}
+
+In WPA2-Personal the passphrase (8--63 characters) and \ac{ssid} are fed into
+PBKDF2 to produce the 256-bit \ac{pmk}:
+\begin{equation}
+  \mathrm{PMK} = \mathrm{PBKDF2}\bigl( \text{HMAC-SHA1},\ \text{passphrase},\ \text{SSID},\ 4096,\ 256 \bigr).
+\end{equation}
+In WPA2/WPA3-Enterprise the \ac{pmk} comes from 802.1X/\ac{eap} authentication
+instead. The 4-way handshake (Figure~\ref{fig:4way}) proves both sides know the
+\ac{pmk} and derives fresh session keys, the \ac{ptk}, from the \ac{pmk}, both
+MAC addresses and two random numbers (nonces):
+\begin{equation}
+  \mathrm{PTK} = \mathrm{PRF}\bigl( \mathrm{PMK},\ \text{``Pairwise key expansion''},\ \mathrm{AA}\,\|\,\mathrm{SPA}\,\|\,\mathrm{ANonce}\,\|\,\mathrm{SNonce} \bigr),
+\end{equation}
+where AA and SPA are the authenticator and supplicant MAC addresses (and the two
+nonces) taken in a fixed min/max order so both sides compute the same value. The
+\ac{ptk} is split into a key-confirmation key, a key-encryption key and a
+temporal key used by \ac{ccmp}. Message~3 also delivers the \ac{gtk} for
+broadcast/multicast traffic, encrypted and protected by a \ac{mic}.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[font=\small,>=Stealth,node distance=0.8cm]
+    \node[font=\bfseries] (sta) {STA (supplicant)};
+    \node[font=\bfseries, right=6.0cm of sta] (ap) {AP (authenticator)};
+
+    \node[draw, fill=yellow!20, font=\scriptsize, below=0.4cm of sta] (pmk1)
+      {PMK known};
+    \node[draw, fill=yellow!20, font=\scriptsize, below=0.4cm of ap] (pmk2)
+      {PMK known};
+
+    \coordinate[below=6.5cm of pmk1] (sta_bottom);
+    \coordinate[below=6.5cm of pmk2] (ap_bottom);
+    \draw[thick] (pmk1.north) -- (sta_bottom);
+    \draw[thick] (pmk2.north) -- (ap_bottom);
+
+    % M1
+    \coordinate[below=0.6cm of pmk1] (m1_l);
+    \coordinate[below=0.6cm of pmk2] (m1_r);
+    \draw[->] (m1_r) -- (m1_l) node[midway, above,
+      font=\scriptsize]{M1: ANonce};
+    \node[anchor=west, font=\scriptsize, below=0.1cm of m1_l] {derive PTK};
+
+    % M2
+    \coordinate[below=1.4cm of m1_l] (m2_l);
+    \coordinate[below=1.4cm of m1_r] (m2_r);
+    \draw[->] (m2_l) -- (m2_r) node[midway, above,
+      font=\scriptsize]{M2: SNonce, MIC, security capabilities};
+    \node[anchor=east, font=\scriptsize, below=0.1cm of m2_r] {derive PTK,
+        verify MIC};
+
+    % M3
+    \coordinate[below=1.4cm of m2_l] (m3_l);
+    \coordinate[below=1.4cm of m2_r] (m3_r);
+    \draw[->] (m3_r) -- (m3_l) node[midway, above,
+      font=\scriptsize]{M3: GTK (encrypted), MIC, ``install keys''};
+    \node[anchor=west, font=\scriptsize, below=0.1cm of m3_l] {verify MIC,
+        install PTK/GTK};
+
+    % M4
+    \coordinate[below=1.4cm of m3_l] (m4_l);
+    \coordinate[below=1.4cm of m3_r] (m4_r);
+    \draw[->] (m4_l) -- (m4_r) node[midway, above,
+      font=\scriptsize]{M4: ACK, MIC};
+    \node[anchor=east, font=\scriptsize, below=0.1cm of m4_r] {install PTK};
+  \end{tikzpicture}
+  \caption{The WPA2/WPA3 4-way handshake.}
+  \label{fig:4way}
+\end{figure}
+
+\subsection{WPA3}
+
+\begin{itemize}
+  \item \textbf{\ac{sae}} replaces the \ac{psk} exchange with a
+        password-authenticated key exchange. Captured handshakes cannot be
+        attacked offline and each guess requires interaction with the \ac{ap};
+        keys also gain forward secrecy.
+  \item \textbf{\ac{pmf}} (802.11w) is mandatory, protecting deauthentication
+        and disassociation frames against forgery.
+  \item \textbf{WPA3-Enterprise 192-bit mode} uses \ac{gcmp}-256 and 384-bit
+        elliptic-curve cryptography for high-security environments.
+  \item \textbf{\ac{owe} (``Enhanced Open'')} \cite{rfc8110} encrypts open
+        networks (e.g.\ cafes) without a password via an unauthenticated key
+        exchange, defeating passive eavesdropping.
+  \item \textbf{\ac{dpp}} (Wi-Fi Easy Connect) onboards headless \ac{iot}
+        devices with QR codes or similar.
+  \item Early WPA3 implementations had side-channel and downgrade weaknesses
+        (``Dragonblood'') that were addressed by updates \cite{dragonblood2020};
+        keep firmware current.
+\end{itemize}
+The 6~GHz band requires WPA3 (or \ac{owe}), so Wi-Fi~6E/7 networks are secure by
+default.
+
+\subsection{Enterprise Authentication}
+
+IEEE 802.1X \cite{ieee8021x} defines three roles: the \emph{supplicant}
+(client), the \emph{authenticator} (\ac{ap} or switch) and the
+\emph{authentication server}, typically a \ac{radius} server \cite{rfc2865}. The
+authenticator blocks all traffic except \ac{eapol} until the server returns
+success; the \ac{eap} \cite{rfc3748} method carries the credentials inside a
+\ac{tls} tunnel where applicable.
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Common EAP methods.}
+  \label{tab:eap}
+  \begin{tabularx}{\linewidth}{@{} L{0.6} L{1.2} L{1.2} @{}}
+    \toprule
+    \textbf{Method}       & \textbf{Credentials}                                     & \textbf{Notes}                                                         \\
+    \midrule
+    EAP-TLS               & Client and server certificates                           & Strongest; requires a PKI and certificate distribution                 \\
+    \acs{peap} / EAP-TTLS & Server certificate; user name and password inside tunnel & Common; must validate the server certificate to avoid credential theft \\
+    EAP-FAST              & Protected access credential                              & Cisco-originated; avoids certificates                                  \\
+    EAP-SIM / AKA         & SIM card                                                 & Mobile-operator Wi-Fi offload                                          \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Threats and Countermeasures}
+
+\begin{table}[!htbp]
+  \centering\footnotesize
+  \caption{Common WLAN threats and defences.}
+  \label{tab:threats}
+  \begin{tabularx}{\linewidth}{@{} L{0.7} L{1.15} L{1.15} @{}}
+    \toprule
+    \textbf{Threat}                         & \textbf{Description}                                            & \textbf{Countermeasure}                               \\
+    \midrule
+    Eavesdropping                           & Passive capture of frames on open or weakly encrypted networks  & WPA2/WPA3, \acs{owe} for open guest networks          \\
+    Rogue \acs{ap}                          & Unauthorised \acs{ap} attached to the wired network             & \acs{wips}, wired port security, regular scans        \\
+    Evil twin                               & Fake \acs{ap} imitating a legitimate \acs{ssid} to trap clients & 802.1X with server-certificate validation, \acs{wips} \\
+    Deauthentication / disassociation flood & Forged management frames force clients offline                  & \acs{pmf} (802.11w), WPA3                             \\
+    Offline passphrase guessing             & Captured WPA2 handshake tested against dictionaries             & Long random passphrases, \acs{sae}, 802.1X            \\
+    Key reinstallation (\acs{krack})        & Replaying handshake messages to reset nonces \cite{krack2017}   & Patched clients and \acp{ap}                          \\
+    \acs{wps} PIN abuse                     & Short PIN of Wi-Fi Protected Setup brute-forced                 & Disable \acs{wps}                                     \\
+    Weak segmentation                       & Compromised guest or \acs{iot} device reaches internal systems  & \acp{vlan}, firewall policy, client isolation         \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Hardening}
+
+\begin{itemize}
+  \item Use WPA3 (or WPA2-\acs{aes} only); disable \acs{wep},
+        \acs{wpa}/\acs{tkip}, and \acs{wps}.
+  \item Prefer 802.1X with certificates for corporate networks; use unique
+        passphrases of 16+ random characters for personal/\acs{psk} networks.
+  \item Enable \acs{pmf}; keep \ac{ap}/controller firmware up to date.
+  \item Separate corporate, guest, voice and \acs{iot} traffic into different
+        \acp{vlan} with firewall rules; enable client isolation on guest
+        \acp{ssid}.
+  \item Deploy \acs{wips} or built-in rogue detection; monitor logs for repeated
+        authentication failures.
+  \item Do not rely on hidden \acp{ssid} or MAC filtering; they are trivial to
+        bypass and are not security controls.
+\end{itemize}
+\endgroup
