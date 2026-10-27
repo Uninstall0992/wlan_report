@@ -10,9 +10,7 @@
 
 \subsection{Generations of Wi-Fi}
 
-Table~\ref{tab:generations} summarises the main PHY amendments. Peak
-rates are theoretical maxima (maximum spatial streams, shortest guard interval)
-and are never reached in practice by a single typical client.
+Table~\ref{tab:generations} summarises the main PHY amendments.
 Generation names for 802.11b/a/g are informal and retroactive.
 
 \begin{table}[htbp]
@@ -74,7 +72,7 @@ most relevant ones are listed in Table~\ref{tab:amendments}.
 Spanning roughly 2400--2483.5~MHz, the 2.4~GHz \ac{ism} band offers good range
 and wall penetration but is narrow and crowded (Bluetooth, Zigbee, microwave
 ovens, cordless phones). Channels are 5~MHz apart but a 20/22~MHz
-signal occupies about four channel numbers. Channels 1, 6 and 11 are
+signal overlaps about four adjacent channel numbers. Channels 1, 6 and 11 are
 the usual non-overlapping planning choice. In Vietnam, the 2.4~GHz band
 utilizes channels 1--13 and equipment must comply with the \ac{vnmic} technical
 standards, such as \acs{qcvn} 54:2020/BTTTT, to determine permitted maximum
@@ -89,22 +87,22 @@ transmission power.
     \pgfmathsetmacro{\hpeak}{1.6}
 
     \foreach \n in
-      {1,...,13}{
-        \pgfmathsetmacro{\xc}{(\n - 1) * \xscale} \draw[gray!70] (\xc-\wband,0)
-        .. controls (\xc-\wctrl,\hpeak) and (\xc+\wctrl,\hpeak) ..
-        (\xc+\wband,0); \node[font=\scriptsize, anchor=north] at (\xc,-0.1)
-        {\n};
-      }
-      \foreach \n/\col in
-      {1/red, 6/blue, 11/green!50!black}{
-        \pgfmathsetmacro{\xc}{(\n - 1) * \xscale} \draw[\col,very thick]
-        (\xc-\wband,0) .. controls (\xc-\wctrl,\hpeak) and (\xc+\wctrl,\hpeak)
-        .. (\xc+\wband,0);
-      }
-      \pgfmathsetmacro{\xend}{12 * \xscale + 1.2} \draw[->] (-1.5,0)
-      -- (\xend,0);
+    {1,...,13}{
+      \pgfmathsetmacro{\xc}{(\n - 1) * \xscale} \draw[gray!70] (\xc-\wband,0)
+      .. controls (\xc-\wctrl,\hpeak) and (\xc+\wctrl,\hpeak) ..
+      (\xc+\wband,0); \node[font=\scriptsize, anchor=north] at (\xc,-0.1)
+      {\n};
+    }
+    \foreach \n/\col in
+    {1/red, 6/blue, 11/green!50!black}{
+      \pgfmathsetmacro{\xc}{(\n - 1) * \xscale} \draw[\col,very thick]
+      (\xc-\wband,0) .. controls (\xc-\wctrl,\hpeak) and (\xc+\wctrl,\hpeak)
+      .. (\xc+\wband,0);
+    }
+    \pgfmathsetmacro{\xend}{12 * \xscale + 1.2} \draw[->] (-1.5,0)
+    -- (\xend,0);
     \node[font=\small, anchor=north] at ({6 * \xscale},-0.6)
-      {Channel number (centre $= 2407 + 5n$~MHz)};
+    {Channel number (centre $= 2407 + 5n$~MHz)};
   \end{tikzpicture}
   \caption{2.4~GHz channel plan: channels 1, 6 and 11 (bold) do not overlap.}
   \label{fig:ch24}
@@ -123,16 +121,16 @@ channel $n$ is
   f_c = 5000 + 5n \ \text{MHz}.
 \end{equation}
 Channels may be bonded into 40, 80 and 160~MHz widths, but wide channels reduce
-the number of independent channels and increase co-channel contention.
+the number of independent channels and increase the risk of co-channel interference.
 
 \subsubsection{The 6~GHz band}
 
 Wi-Fi~6E and Wi-Fi~7 can use the 6~GHz band. Under Vietnam's Circular
-01/2025/TT-BKHCN (effective May 15, 2025), the 5925--6425~MHz spectrum is
+01/2025/TT-BKHCN (effective 15~May 2025), the 5925--6425~MHz spectrum is
 officially allocated for Wi-Fi. Indoor usage is allowed up to 200~mW
 \ac{eirp} (max \ac{psd} of 10~dBm/MHz), while outdoor deployments are limited to
 25~mW \ac{eirp} (max \ac{psd} of 1~dBm/MHz). Devices are forbidden on
-\acp{uas}. Where 6~GHz operation is permitted, \ac{wpa} version~3 (or
+\acp{uas}. Where 6~GHz operation is permitted, WPA3 (or
 \ac{owe}) is mandatory.
 
 \subsubsection{Other bands}
@@ -146,6 +144,15 @@ wall penetration for \ac{iot} sensors.
 In Vietnam, the \ac{vnmic} sets national frequency allocation and technical
 conformity (\acs{qcvn}) standards determining permitted WLAN channels, transmit
 power, indoor and outdoor use, and \ac{dfs} requirements. Devices must
-undergo mandatory conformity testing and submit a \ac{doc} for
-certification.
+undergo mandatory conformity testing and obtain certification by
+submitting a \ac{doc}.
+
+\begin{tomtat}
+\item Wi-Fi phát triển từ 802.11 (1997, 2~Mb/s) đến Wi-Fi~7 (802.11be: kênh 320~MHz, 4096-QAM, \acs{mlo}, tốc độ \acs{phy} lý thuyết tối đa khoảng 46~Gb/s). Tốc độ đỉnh chỉ là lý thuyết.
+\item Các bản bổ sung chức năng cho \acs{phy}: \acs{qos} (e), \acs{dfs}/\acs{tpc} (h), bảo mật (i, w), chuyển vùng (k, r, v), mesh (s), cùng các bản cho \acs{iot}, định vị và cảm biến.
+\item Băng 2,4~GHz: tầm xa, xuyên tường tốt nhưng hẹp và đông đúc; kênh 1, 6, 11 không chồng lấn; Việt Nam dùng kênh 1--13.
+\item Băng 5~GHz: nhiều kênh hơn, có thể ghép 40/80/160~MHz, một số kênh yêu cầu \acs{dfs} để tránh radar.
+\item Băng 6~GHz: theo Thông tư 01/2025/TT-BKHCN, dải 5925--6425~MHz dành cho Wi-Fi; trong nhà tối đa 200~mW \acs{eirp}, ngoài trời 25~mW, không được sử dụng trên \acs{uas}; bắt buộc WPA3 hoặc \acs{owe}.
+\item Thiết bị tại Việt Nam phải tuân thủ các quy chuẩn \acs{qcvn} do \acs{vnmic} quy định, được kiểm tra hợp quy và nộp bản \acs{doc}.
+\end{tomtat}
 \endgroup

@@ -10,8 +10,8 @@
 \subsection{What Is a WLAN?}
 
 A \ac{wlan} is a data network that connects devices over a radio-frequency
-medium instead of cables, typically inside a home, an office floor, a campus or
-a public venue. Modern \acp{wlan} are almost exclusively built on the \ac{ieee}
+medium instead of cables, typically inside a home, an office floor, a campus,
+or a public venue. Modern \acp{wlan} are almost exclusively built on the \ac{ieee}
 802.11 family of standards, which define the \ac{phy} and \ac{mac} layers
 \cite{ieee80211_2020}.
 
@@ -54,23 +54,30 @@ important.
 
 \begin{itemize}
   \item \textbf{Advantages:}
-        \begin{itemize}
-          \item \textbf{Mobility and convenience:} users keep connectivity while
-                moving between rooms or buildings.
-          \item \textbf{Fast, low-cost deployment:} no cable pulling; ideal for
-                temporary sites, heritage buildings and dense venues.
-          \item \textbf{Scalability:} capacity grows by adding \acp{ap} and
-                channels.
-        \end{itemize}
+    \begin{itemize}
+      \item \textbf{Mobility and convenience:} users keep connectivity while
+        moving between rooms or buildings.
+      \item \textbf{Fast, low-cost deployment:} no cable pulling; ideal for
+        temporary sites, heritage buildings and dense venues.
+      \item \textbf{Scalability:} capacity grows by adding \acp{ap} and
+        channels.
+    \end{itemize}
   \item \textbf{Disadvantages:}
-        \begin{itemize}
-          \item \textbf{Shared medium:} all stations in range of the same
-                channel share its airtime, so capacity is lower and less
-                predictable than switched Ethernet.
-          \item \textbf{Interference and propagation effects:} walls,
-                reflections and other radios degrade performance.
-          \item \textbf{Security exposure:} radio signals leave the building, so
-                strong encryption and authentication are mandatory.
-        \end{itemize}
+    \begin{itemize}
+      \item \textbf{Shared medium:} all stations in range of the same
+        channel compete for the same airtime, so capacity is lower and
+        less predictable than with switched Ethernet.
+      \item \textbf{Interference and propagation effects:} walls,
+        reflections and other radios degrade performance.
+      \item \textbf{Security exposure:} radio signals leave the building, so
+        strong encryption and authentication are mandatory.
+    \end{itemize}
 \end{itemize}
+
+\begin{tomtat}
+\item \acs{wlan} là mạng cục bộ dùng sóng vô tuyến thay cho cáp, hầu hết xây dựng trên họ chuẩn \acs{ieee} 802.11 (định nghĩa lớp \acs{phy} và \acs{mac}).
+\item So với \acs{lan} có dây, \acs{wlan} linh hoạt và dễ triển khai hơn nhưng dùng chung môi trường truyền, nên nhạy với khoảng cách, nhiễu và vật cản.
+\item Về phạm vi, \acs{wlan} nằm giữa \acs{wpan} (khoảng 10~m) và \acs{wwan} (hàng km mỗi ô).
+\item Di động, dễ triển khai nhanh và rẻ, mở rộng bằng cách thêm \acs{ap} và kênh. Nhưng có ít dung lượng để chia sẻ, dễ nhiễu, sóng lan ra diện rộng nên bắt buộc phải có mã hóa và xác thực mạnh.
+\end{tomtat}
 \endgroup

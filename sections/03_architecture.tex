@@ -11,28 +11,28 @@
 
 \begin{description}[style=nextline]
   \item[\acl{sta}] Any device with an 802.11 radio: laptop, phone, \ac{iot}
-        sensor or printer. A client \ac{sta} associates with an \ac{ap}.
+    sensor or printer. A client \ac{sta} associates with an \ac{ap}.
   \item[\acl{ap}] Bridges wireless clients to the wired \ac{lan}. An \ac{ap} may
-        host several virtual networks, each with its own \ac{ssid}.
+    host several virtual networks, each with its own \ac{ssid}.
   \item[\acl{wlc}] Centralises configuration, \ac{rrm}, security policy and
-        roaming for many lightweight \acp{ap}.
+    roaming for many lightweight \acp{ap}.
   \item[\acl{ds}] The (usually wired Ethernet) backbone that interconnects
-        \acp{ap} and provides access to servers and the Internet.
-  \item[\acl{poe}] Standards 802.3af (about 15~W), 802.3at (30~W) and 802.3bt
-        (60--90~W) power \acp{ap} over the Ethernet cable; modern Wi-Fi~6/7
-        \acp{ap} may need 802.3at or 802.3bt.
+    \acp{ap} and provides access to servers and the Internet.
+  \item[\acl{poe}] Standards 802.3af (~15~W), 802.3at (30~W), and 802.3bt
+    (60--90~W) deliver power to \acp{ap} over the Ethernet cable; modern
+    Wi-Fi~6/7 \acp{ap} may need 802.3at or 802.3bt.
 \end{description}
 
 \subsection{Service Sets and Topologies}
 
 \begin{itemize}
   \item \textbf{\ac{bss}:} one \ac{ap} and its associated stations. Identified
-        by the \ac{bssid}, normally the \ac{ap} radio's MAC address.
+    by the \ac{bssid}, normally the \ac{ap} radio's MAC address.
   \item \textbf{\ac{ibss}:} an ad hoc peer-to-peer network without an \ac{ap}.
   \item \textbf{\ac{ess}:} several \acp{bss} connected by a \ac{ds} and sharing
-        an \ac{ssid}, allowing roaming.
+    an \ac{ssid}, allowing roaming.
   \item \textbf{Mesh \ac{bss}:} \acp{ap} forward traffic wirelessly to each
-        other (802.11s or vendor mesh); only some nodes need a wired uplink.
+    other (802.11s or vendor mesh); only some nodes need a wired uplink.
 \end{itemize}
 
 \begin{figure}[htbp]
@@ -40,11 +40,11 @@
   \begin{tikzpicture}[
       node distance=1.5cm and 1.0cm,
       ap/.style={draw,rounded corners,fill=blue!10,minimum width=2.4cm,minimum
-        height=0.8cm,font=\small},
+      height=0.8cm,font=\small},
       sta/.style={draw,circle,fill=green!10,minimum
-        size=0.9cm,font=\scriptsize},
+      size=0.9cm,font=\scriptsize},
       ds/.style={draw,fill=orange!15,minimum width=7.5cm,minimum
-        height=0.7cm,font=\small}
+      height=0.7cm,font=\small}
     ]
     \node[ds] (ds) {Distribution System (wired LAN)};
 
@@ -101,14 +101,31 @@ messages (UDP port 5246, protected by DTLS) and optionally client data (UDP port
 
 \begin{itemize}
   \item \textbf{VLANs and SSIDs:} each \ac{ssid} is normally mapped to a
-        \ac{vlan} (corporate, guest, voice, \ac{iot}) so traffic can be
-        segmented and policed.
+    \ac{vlan} (corporate, guest, voice, \ac{iot}) so traffic can be
+    segmented and policed.
   \item \textbf{DHCP and DNS:} must be sized for the peak number of clients and
-        short lease times in guest networks.
+    short lease times in guest networks.
   \item \textbf{RADIUS:} authentication, authorisation and accounting for 802.1X
-        (Section~\ref{sec:security}).
+    (Section~\ref{sec:security}).
   \item \textbf{Layer-2 vs Layer-3 roaming:} within one subnet a client keeps
-        its IP address; across subnets a controller either tunnels traffic to an
-        anchor or the client renews its address.
+    its IP address; across subnets a controller either tunnels traffic to an
+    anchor or the client must obtain a new IP address (via DHCP).
 \end{itemize}
+
+\begin{tomtat}
+\item Thành phần cơ bản: \acs{sta} (trạm), \acs{ap} (điểm truy cập), \acs{wlc} (bộ điều khiển),
+  \acs{ds} (hệ thống phân phối) và \acs{poe} (cấp nguồn qua cáp Ethernet).
+\item Các tập
+  dịch vụ: \acs{bss} (một \acs{ap} và các trạm của nó), \acs{ibss} (ad hoc, không
+  \acs{ap}), \acs{ess} (nhiều \acs{bss} nối qua \acs{ds}, cho phép chuyển vùng) và
+  Mesh \acs{bss}.
+\item Mô hình triển khai:
+  \acs{ap} độc lập, dùng bộ điều khiển (chuyển mạch tập trung hoặc cục bộ), quản lý
+  qua đám mây và mesh; mỗi mô hình cân bằng giữa tính đơn giản, khả năng mở rộng
+  và mức độ phụ thuộc.
+\item \acs{capwap} (UDP 5246 cho điều khiển, 5247 cho dữ liệu)
+  kết nối \acs{ap} nhẹ với \acs{wlc}.
+\item Dịch vụ xung quanh: ánh xạ \acs{ssid}--\acs{vlan} để phân
+  đoạn lưu lượng, DHCP/DNS, \acs{radius} cho 802.1X, và chuyển vùng lớp 2/lớp 3.
+\end{tomtat}
 \endgroup

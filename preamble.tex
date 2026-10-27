@@ -15,3 +15,16 @@
 \acsetup{make-links=true}
 
 \input{acronyms}
+
+% Tóm tắt ngắn.
+\newenvironment{tomtat}{%
+  \par\medskip\noindent
+  \begin{minipage}{\linewidth}%
+    \hrule\smallskip
+    \noindent\textbf{Tóm tắt}\par\nopagebreak
+    \begin{itemize}[nosep,leftmargin=*]%
+      }{%
+    \end{itemize}%
+    \smallskip\hrule
+  \end{minipage}\par\medskip
+}
