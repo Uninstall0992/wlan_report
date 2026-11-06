@@ -1,0 +1,42 @@
+\begin{tikzpicture}
+% Upstream
+\node[dev,minimum width=3.4cm] (m) at (8,2.35) {\textbf{Mạng gia đình} (router mesh, ra Internet)};
+% Router
+\node[core,align=center,minimum width=7.2cm] (r) at (8,0) {%
+  \textbf{\color{chude}N09-Router} -- TP-Link Archer C20 v5, OpenWrt 25.12.6\\
+  LAN \texttt{br-lan}: \textbf{192.168.1.1/24}; DHCP .100--.249, thuê 12 giờ\\
+  WAN \texttt{eth0.2}: DHCP client};
+\draw[cableopt] (m.south) -- node[lab,right=4pt,align=left]{Cáp Ethernet vào cổng WAN: chỉ nối khi\\thiết lập ban đầu và ở cảnh 19--21} (r.north);
+% Radios
+\node[dev,minimum width=5.6cm,anchor=north] (r0) at (3.9,-1.45) {%
+  \textbf{radio0 -- 2,4 GHz} (MT7628, 802.11b/g/n)\\
+  SSID \texttt{25CLC04-N09}, kênh 6, 20 MHz\\
+  BSSID \texttt{B0:95:75:9F:1C:A3}\\
+  {\color{canhbao}Cuối buổi: \emph{disabled} (WPA2-802.1X)}};
+\node[dev,minimum width=5.6cm,anchor=north] (r1) at (12.1,-1.45) {%
+  \textbf{radio1 -- 5 GHz} (MT7610E, 802.11ac)\\
+  SSID \texttt{25CLC04-N09-5G}, kênh 36, 80 MHz\\
+  BSSID \texttt{B0:95:75:9F:1C:A2}\\
+  WPA2-PSK (CCMP)};
+\draw[line width=0.7pt,chude] ($(r.south)+(-1.4,0)$) |- (r0.east);
+\draw[line width=0.7pt,chude] ($(r.south)+(1.4,0)$) |- (r1.west);
+% Clients
+\foreach \x/\n/\t in {
+  1.55/c1/{\textbf{Desktop} -- Linux Mint\\(Khánh) \texttt{luckmintpc}\\192.168.1.216\\IP cố định: .50},
+  4.80/c2/{\textbf{Laptop Windows}\\(Vũ) \texttt{ItzITmeehh}\\192.168.1.199},
+  8.05/c3/{\textbf{Điện thoại Android}\\(Vũ)\\kết nối SSID 5 GHz},
+  11.30/c4/{\textbf{Laptop Arch Linux}\\(Khánh) \texttt{nguyenqk-pc}\\192.168.1.145},
+  14.55/c5/{\textbf{Redmi Note 14}\\(Tuấn)\\192.168.1.115\\MAC ngẫu nhiên}}
+  {\node[dev,minimum width=2.95cm,minimum height=1.75cm,anchor=north] (\n) at (\x,-5.0) {\t};}
+\coordinate (hub) at (8,-4.35);
+\draw[wifi] (r.south) -- (hub);
+\foreach \n in {c1,c2,c3,c4,c5} \draw[wifi] (hub) -- (\n.north);
+\node[lab,right=2pt] at (8,-3.2) {Wi-Fi};
+% Desktop cable to LAN port
+\coordinate (a) at ($(r.west)+(0,-0.3)$);
+\draw[cable] (a) -| ($(c1.north west)+(0.3,0)$);
+\node[lab,anchor=west,fill=none] at ($(c1.north west)+(0.35,1.9)$) {cáp LAN};
+% BSS region
+\node[region,fit=(r0)(r1)(c1)(c5),inner sep=7pt] (bss) {};
+\node[ttl,anchor=north west] at (bss.south west) {Vùng phủ sóng của N09-Router -- mô hình Infrastructure (BSS)};
+\end{tikzpicture}

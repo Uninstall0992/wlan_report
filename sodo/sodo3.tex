@@ -1,0 +1,31 @@
+\begin{tikzpicture}
+\node[dev,ellipse,minimum width=2.1cm,minimum height=1.1cm] (inet) at (0.9,-0.1) {\textbf{Internet}};
+\node[dev,minimum width=2.2cm] (ont) at (3.6,-0.1) {\textbf{ONT}\\modem quang\\nhà mạng};
+\node[dev,fill=nhat,minimum width=1.45cm,minimum height=1.0cm] (rt) at (6.9,-0.1) {\textbf{Router}\\NAT, DHCP\\tường lửa};
+\node[dev,fill=nhat,minimum width=1.45cm,minimum height=1.0cm] (sw) at (8.5,-0.1) {\textbf{Switch}\\cổng LAN};
+\node[dev,fill=nhat,minimum width=1.45cm,minimum height=1.0cm] (ap1) at (10.1,-0.1) {\textbf{AP 1}\\phát Wi-Fi};
+\begin{scope}[on background layer]
+\node[core,fit=(rt)(sw)(ap1),inner sep=6pt] (wr) {};
+\end{scope}
+\node[ttl,anchor=south] at (wr.north) {Router không dây gia đình (thiết bị tích hợp)};
+\node[dev,minimum width=2.2cm] (ap2) at (14.7,-0.1) {\textbf{AP 2}\\mở rộng vùng phủ};
+\draw[cable] (inet) -- node[lab,above=2pt]{cáp quang} (ont);
+\draw[cable] (ont) -- node[lab,above=2pt]{WAN} (wr.west |- ont);
+\draw[cable] (sw.north) -- ++(0,0.14) -| node[lab,pos=0.42,above=2pt]{Ethernet -- hệ thống phân phối (DS)} (ap2.north);
+\node[dev,minimum width=2.2cm] (pc) at (3.6,-3.0) {\textbf{PC có dây}};
+\draw[cable] (sw.south) -- ++(0,-0.75) -| node[lab,pos=0.25,above=1pt]{Ethernet (cổng LAN)} (pc.north);
+\foreach \x/\n/\t in {8.75/a/Laptop, 10.15/b/Điện\\thoại, 11.55/c/Smart\\TV}
+  {\node[dev,minimum width=1.25cm,minimum height=0.95cm] (\n) at (\x,-3.0) {\t};
+   \draw[wifi] (ap1.south) -- (\n.north);}
+\foreach \x/\n/\t in {13.3/d/Điện\\thoại, 14.7/e/Máy tính\\bảng, 16.1/f/Camera\\Wi-Fi}
+  {\node[dev,minimum width=1.25cm,minimum height=0.95cm] (\n) at (\x,-3.0) {\t};
+   \draw[wifi] (ap2.south) -- (\n.north);}
+\node[region,fit=(a)(c),inner sep=5pt] (b1) {};
+\node[font=\scriptsize\bfseries,text=chude,anchor=north] at (b1.south) {BSS 1 -- BSSID của AP 1};
+\node[region,fit=(d)(f),inner sep=5pt] (b2) {};
+\node[font=\scriptsize\bfseries,text=chude,anchor=north] at (b2.south) {BSS 2 -- BSSID của AP 2};
+\node[draw=canhbao,dashed,rounded corners=8pt,line width=0.8pt,fit=(wr)(ap2)(b1)(b2),
+  inner sep=14pt] (ess) {};
+\node[font=\footnotesize\bfseries,text=canhbao,anchor=north east,align=right] at (ess.south east)
+  {ESS: các AP dùng chung SSID và cấu hình bảo mật,\\thiết bị chuyển vùng (roaming) giữa các BSS};
+\end{tikzpicture}

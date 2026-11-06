@@ -1,6 +1,6 @@
 % B_terminology.tex -- concise English--Vietnamese WLAN terminology
 % =====================================================================
-\section{English--Vietnamese Terminology}
+\section{Thuật ngữ chuyên ngành Anh--Việt}
 \label{app:terms}
 
 \begingroup
@@ -12,157 +12,117 @@
 }
 
 \begin{xltabular}{\linewidth}{@{} L{0.8} L{0.8} L{1.4} @{}}
-  \caption{Core English--Vietnamese WLAN terminology.}
+  \caption{Các thuật ngữ WLAN Anh--Việt thường dùng.}
   \label{tab:terms}\\
   \toprule
-  \textbf{English term (abbr.)} & \textbf{Tiếng Việt} & \textbf{Short
-  definition}\\
+  \textbf{Thuật ngữ tiếng Anh (viết tắt)} & \textbf{Tiếng Việt} &
+  \textbf{Giải thích ngắn}\\
   \midrule
   \endfirsthead
-  \multicolumn{3}{@{}l}{\small\textsl{Table~\thetable\ (continued)}}\\
+  \multicolumn{3}{@{}l}{\small\textsl{Bảng~\thetable\ (tiếp theo)}}\\
   \toprule
-  \textbf{English term (abbr.)} & \textbf{Tiếng Việt} & \textbf{Short
-  definition}\\
+  \textbf{Thuật ngữ tiếng Anh (viết tắt)} & \textbf{Tiếng Việt} &
+  \textbf{Giải thích ngắn}\\
   \midrule
   \endhead
   \midrule
-  \multicolumn{3}{r@{}}{\small\textsl{continued on next page}}\\
+  \multicolumn{3}{r@{}}{\small\textsl{tiếp tục ở trang sau}}\\
   \endfoot
   \bottomrule
   \endlastfoot
 
-  \catrow{Networks and architecture}
-  Local Area Network (LAN) & Mạng cục bộ & Network serving a limited geographic area\\
-  Wireless Local Area Network (WLAN) & Mạng cục bộ không dây & Local network
-  using radio instead of cables\\
-  Wi-Fi & Mạng không dây Wi-Fi & Wi-Fi Alliance brand for certified 802.11
-  products\\
-  Access Point (AP) & Điểm truy cập & Device that bridges wireless clients to a
-  wired network\\
-  Wireless station (STA) & Trạm không dây & Device with an 802.11 radio\\
-  Wireless LAN Controller (WLC) & Bộ điều khiển mạng không dây & Central manager
-  for lightweight APs\\
-  Basic Service Set (BSS) & Tập dịch vụ cơ bản & One AP and its associated
-  stations\\
-  BSS Identifier (BSSID) & Mã định danh BSS & Identifier, normally a MAC
-  address, for a BSS\\
-  Extended Service Set (ESS) & Tập dịch vụ mở rộng & Several BSSs sharing one
-  SSID\\
-  Service Set Identifier (SSID) & Tên mạng & Name advertised by a wireless
-  network\\
-  Association & Liên kết & Procedure by which a station joins an AP\\
-  Distribution System (DS) & Hệ thống phân phối & Backbone interconnecting APs\\
-  Roaming & Chuyển vùng & Moving between APs without losing connectivity\\
-  Power over Ethernet (PoE) & Cấp nguồn qua Ethernet & Power delivered over the
-  data cable\\
-  Virtual LAN (VLAN) & Mạng LAN ảo & Logical segmentation of a network\\
+  \catrow{Mạng và kiến trúc}
+  Local Area Network (LAN) & Mạng cục bộ & Mạng truyền thông phục vụ trong phạm vi địa lý giới hạn\\
+  Wireless Local Area Network (WLAN) & Mạng cục bộ không dây & Mạng cục bộ sử dụng sóng vô tuyến thay cho đường dây cáp\\
+  Wi-Fi & Mạng không dây Wi-Fi & Nhãn hiệu của Wi-Fi Alliance chứng nhận cho các thiết bị đạt chuẩn 802.11\\
+  Access Point (AP) & Điểm truy cập & Thiết bị bắc cầu kết nối các trạm không dây vào mạng có dây\\
+  Wireless station (STA) & Trạm không dây & Thiết bị được trang bị bộ thu phát vô tuyến theo chuẩn 802.11\\
+  Wireless LAN Controller (WLC) & Bộ điều khiển mạng không dây & Thiết bị quản lý và kiểm soát tập trung nhiều AP dạng lightweight\\
+  Basic Service Set (BSS) & Tập dịch vụ cơ bản & Một AP cùng tập hợp các trạm không dây đã thiết lập liên kết với AP đó\\
+  BSS Identifier (BSSID) & Mã định danh BSS & Mã nhận diện duy nhất cho một BSS, thông thường là địa chỉ MAC của AP\\
+  Extended Service Set (ESS) & Tập dịch vụ mở rộng & Hệ thống gồm nhiều BSS liên kết qua mạng phân phối và dùng chung SSID\\
+  Service Set Identifier (SSID) & Tên mạng & Chuỗi tên định danh logic được mạng không dây quảng bá\\
+  Association & Liên kết & Thủ tục trạm không dây gia nhập và thiết lập liên kết với một AP\\
+  Distribution System (DS) & Hệ thống phân phối & Đường trục kết nối liên thông các AP trong mạng mở rộng\\
+  Roaming & Chuyển vùng & Quá trình trạm di chuyển giữa các AP mà vẫn duy trì kết nối mạng liên tục\\
+  Power over Ethernet (PoE) & Cấp nguồn qua Ethernet & Công nghệ cấp nguồn điện trực tiếp cho thiết bị qua sợi cáp mạng\\
+  Virtual LAN (VLAN) & Mạng LAN ảo & Kỹ thuật phân đoạn logic một mạng cục bộ vật lý thành các miền quảng bá riêng\\
 
-  \catrow{Radio and physical layer}
-  Wireless medium & Môi trường truyền không dây & Shared radio path used to
-  exchange frames\\
-  Frequency & Tần số & Number of wave cycles per second\\
-  Band & Băng tần & Range of frequencies used by a radio system\\
-  Channel & Kênh & Portion of a band used by one network\\
-  Channel width & Độ rộng kênh & Spectrum occupied by a channel\\
-  ISM band & Băng tần công nghiệp, khoa học và y tế & Unlicensed band such as
-  2.4 GHz\\
-  Regulatory domain & Miền quản lý tần số & Country-specific channel and power
-  rules\\
-  Antenna gain & Độ lợi anten & Focusing ability of an antenna relative to
-  isotropic radiation\\
-  Transmit power & Công suất phát & Radio power output, commonly measured in
-  dBm\\
-  EIRP & Công suất bức xạ đẳng hướng tương đương & Transmit power plus antenna
-  gain minus cable loss\\
-  RSSI & Cường độ tín hiệu thu & Measure of received signal level\\
-  Signal-to-Noise Ratio (SNR) & Tỷ số tín hiệu trên nhiễu & Signal level
-  relative to background noise\\
-  Interference & Nhiễu & Unwanted signal degrading reception\\
-  Path loss & Suy hao đường truyền & Loss of power over distance\\
-  Multipath & Đa đường & Signal arriving over several propagation paths\\
-  Fading & Pha-đinh & Rapid signal variation caused by propagation effects\\
-  Modulation & Điều chế & Encoding data onto a carrier wave\\
-  Coding rate & Tốc độ mã hóa & Fraction of transmitted bits carrying
-  information\\
-  MCS & Sơ đồ điều chế và mã hóa & Index selecting modulation and coding rate\\
-  OFDM & Ghép kênh phân chia theo tần số trực giao & Many orthogonal subcarriers
-  in one channel\\
-  OFDMA & Đa truy cập phân chia theo tần số trực giao & Subcarriers allocated to
-  different users\\
-  MIMO & Đa đầu vào đa đầu ra & Multiple antennas at transmitter and receiver\\
-  Beamforming & Tạo búp sóng & Focusing signal energy towards a client\\
-  Throughput & Thông lượng & Actual data delivered per second\\
-  Latency & Độ trễ & Time for data to travel from source to destination\\
+  \catrow{Vô tuyến và lớp vật lý}
+  Wireless medium & Môi trường truyền không dây & Môi trường truyền dẫn vô tuyến dùng chung để trao đổi khung dữ liệu\\
+  Frequency & Tần số & Số chu kỳ dao động toàn phần của sóng điện từ trong một giây\\
+  Band & Băng tần & Dải tần số vô tuyến được phân bổ sử dụng cho một hệ thống thông tin\\
+  Channel & Kênh & Phân đoạn tần số cụ thể bên trong băng tần phục vụ một liên kết mạng\\
+  Channel width & Độ rộng kênh & Bề rộng dải phổ tần số mà một kênh truyền vô tuyến chiếm dụng\\
+  ISM band & Băng tần công nghiệp, khoa học và y tế & Các dải tần số không cần cấp phép như 2,4~GHz và 5~GHz\\
+  Regulatory domain & Miền quản lý tần số & Khu vực quốc gia áp dụng các quy chuẩn kỹ thuật riêng về tần số và công suất\\
+  Antenna gain & Độ lợi anten & Khả năng tập trung năng lượng bức xạ vô tuyến theo hướng nhất định\\
+  Transmit power & Công suất phát & Mức công suất sóng vô tuyến phát ra tại cổng anten, tính bằng dBm hoặc mW\\
+  EIRP & Công suất bức xạ đẳng hướng tương đương & Công suất phát thực tế gồm công suất máy phát cộng độ lợi anten trừ suy hao cáp\\
+  RSSI & Cường độ tín hiệu thu & Chỉ số biểu thị mức năng lượng tín hiệu vô tuyến đo được tại máy thu\\
+  Signal-to-Noise Ratio (SNR) & Tỷ số tín hiệu trên nhiễu & Tỷ lệ giữa công suất tín hiệu hữu ích thu được so với công suất tạp âm nền\\
+  Interference & Nhiễu & Tín hiệu vô tuyến ngoài ý muốn gây suy giảm chất lượng thu nhận tín hiệu\\
+  Path loss & Suy hao đường truyền & Sự suy giảm mật độ công suất sóng điện từ khi truyền qua không gian\\
+  Multipath & Đa đường & Hiện tượng tín hiệu truyền tới bên thu qua nhiều đường phản xạ khác nhau\\
+  Fading & Pha-đinh & Sự biến thiên nhanh chóng của biên độ tín hiệu do các hiệu ứng truyền lan\\
+  Modulation & Điều chế & Kỹ thuật biến đổi các đặc tính sóng mang để truyền tải dữ liệu số\\
+  Coding rate & Tốc độ mã hóa & Tỷ số giữa số bit dữ liệu hữu ích thực tế trên tổng số bit truyền đi\\
+  MCS & Sơ đồ điều chế và mã hóa & Bộ chỉ số xác định mức điều chế số kết hợp với tỷ lệ mã hóa kênh\\
+  OFDM & Ghép kênh phân chia theo tần số trực giao & Phương pháp truyền dữ liệu trên nhiều sóng mang con trực giao nhau trong một kênh\\
+  OFDMA & Đa truy cập phân chia theo tần số trực giao & Kỹ thuật phân chia các sóng mang con cho nhiều người dùng truyền nhận đồng thời\\
+  MIMO & Đa đầu vào đa đầu ra & Kỹ thuật sử dụng đồng thời nhiều anten ở cả đầu phát và đầu thu vô tuyến\\
+  Beamforming & Tạo búp sóng & Kỹ thuật xử lý tín hiệu nhằm tập trung búp sóng bức xạ về phía trạm nhận\\
+  Throughput & Thông lượng & Tốc độ truyền dữ liệu hữu ích thực tế đến đích thành công trên mỗi giây\\
+  Latency & Độ trễ & Khoảng thời gian truyền một gói dữ liệu từ điểm nguồn tới điểm đích\\
 
-  \catrow{MAC and quality of service}
-  Medium Access Control (MAC) & Điều khiển truy cập môi trường truyền & Layer
-  arbitrating use of the shared channel\\
-  CSMA/CA & Đa truy cập tránh xung đột & Listen-before-talk access with random
-  backoff\\
-  Carrier sense & Cảm nhận sóng mang & Detecting whether the medium is busy\\
-  Backoff & Thời gian lùi & Random wait before transmitting\\
-  Contention Window (CW) & Cửa sổ tranh chấp & Range from which backoff is
-  chosen\\
-  Request to Send / Clear to Send (RTS/CTS) & Yêu cầu gửi / cho phép gửi &
-  Handshake reserving the channel\\
-  Network Allocation Vector (NAV) & Vectơ phân bổ mạng & Timer for virtual
-  carrier sensing\\
-  Frame & Khung & Basic MAC data unit transmitted over the air\\
-  Beacon & Khung báo hiệu & Periodic broadcast announcing a BSS\\
-  Authentication & Xác thực & Proving identity to the network\\
-  Acknowledgement (ACK) & Xác nhận & Frame confirming successful reception\\
-  Frame aggregation & Gộp khung & Combining several payloads in one
-  transmission\\
-  Quality of Service (QoS) & Chất lượng dịch vụ & Prioritising traffic classes\\
-  Access Category (AC) & Loại truy cập & Voice, video, best-effort or background
-  class\\
-  Power save mode & Chế độ tiết kiệm năng lượng & Radio sleeps between
-  transmissions\\
-  \catrow{Security}
-  Confidentiality & Tính bí mật & Data readable only by authorised parties\\
-  Integrity & Tính toàn vẹn & Data not altered undetected\\
-  Encryption & Mã hóa & Transforming data to an unreadable form\\
-  Wired Equivalent Privacy (WEP) & Bảo mật tương đương mạng có dây & Obsolete,
-  broken wireless protection\\
-  Wi-Fi Protected Access (WPA) & Truy cập Wi-Fi được bảo vệ & Family of Wi-Fi
-  security certifications\\
-  Advanced Encryption Standard (AES) & Chuẩn mã hóa nâng cao & Standard block
-  cipher used by WPA2/WPA3\\
-  Pre-Shared Key (PSK) & Khóa chia sẻ trước & Passphrase-based authentication\\
-  Simultaneous Authentication of Equals (SAE) & Xác thực đồng đẳng & WPA3
-  password-based key exchange\\
-  Protected Management Frames (PMF) & Khung quản lý được bảo vệ & Authenticated
-  management frames\\
-  Pairwise Master Key (PMK) & Khóa chủ theo cặp & Root key used to derive
-  session keys\\
-  Pairwise Transient Key (PTK) & Khóa tạm thời theo cặp & Session key for
-  unicast traffic\\
-  Extensible Authentication Protocol (EAP) & Giao thức xác thực mở rộng &
-  Framework carrying authentication methods\\
-  RADIUS & Dịch vụ xác thực người dùng từ xa & AAA protocol commonly used with
-  802.1X\\
-  Virtual Private Network (VPN) & Mạng riêng ảo & Encrypted tunnel over an
-  untrusted network\\
-  Rogue AP & AP trái phép & Unauthorised AP on the network\\
-  Evil twin & AP song sinh độc hại & Fake AP impersonating a legitimate SSID\\
-  Wireless Intrusion Prevention System (WIPS) & Hệ thống ngăn chặn xâm nhập
-  không dây & Detects and mitigates wireless attacks\\
+  \catrow{Điều khiển truy cập môi trường và chất lượng dịch vụ}
+  Medium Access Control (MAC) & Điều khiển truy cập môi trường truyền & Lớp con điều phối quyền sử dụng môi trường kênh truyền vô tuyến dùng chung\\
+  CSMA/CA & Đa truy cập tránh xung đột & Giao thức nghe sóng mang trước khi truyền kết hợp thời gian lùi ngẫu nhiên\\
+  Carrier sense & Cảm nhận sóng mang & Kỹ thuật phát hiện trạng thái bận hay rỗi của môi trường truyền vô tuyến\\
+  Backoff & Thời gian lùi & Thời gian tạm dừng ngẫu nhiên trước khi thử phát lại khung tin để tránh xung đột\\
+  Contention Window (CW) & Cửa sổ tranh chấp & Phạm vi giá trị số nguyên dùng để lựa chọn ngẫu nhiên khoảng thời gian lùi\\
+  Request to Send / Clear to Send (RTS/CTS) & Yêu cầu gửi / cho phép gửi & Thủ tục bắt tay trước nhằm bảo lưu môi trường truyền vô tuyến trước khi gửi dữ liệu\\
+  Network Allocation Vector (NAV) & Vectơ phân bổ mạng & Bộ đếm thời gian được duy trì tại trạm nhằm cảm nhận sóng mang ảo\\
+  Frame & Khung & Đơn vị dữ liệu giao thức ở lớp MAC được đóng gói và truyền trên sóng vô tuyến\\
+  Beacon & Khung báo hiệu & Khung quản lý quảng bá định kỳ để thông báo sự hiện diện và tham số của BSS\\
+  Authentication & Xác thực & Quá trình kiểm tra và xác nhận danh tính của trạm trước khi gia nhập mạng\\
+  Acknowledgement (ACK) & Xác nhận & Khung điều khiển phản hồi xác nhận khung dữ liệu đã được thu nhận thành công\\
+  Frame aggregation & Gộp khung & Cơ chế ghép nhiều khung dữ liệu nhỏ vào một lần truyền vô tuyến để tăng hiệu suất\\
+  Quality of Service (QoS) & Chất lượng dịch vụ & Cơ chế phân loại và ưu tiên tài nguyên mạng cho các luồng dữ liệu quan trọng\\
+  Access Category (AC) & Loại truy cập & Hạng mục phân loại lưu lượng theo thứ tự ưu tiên (thoại, video, thông thường, nền)\\
+  Power save mode & Chế độ tiết kiệm năng lượng & Cơ chế cho phép vô tuyến chuyển sang chế độ ngủ để giảm mức tiêu thụ điện\\
 
-  \catrow{Deployment and operations}
-  Site survey & Khảo sát hiện trường & Measuring and modelling coverage on
-  site\\
-  Heat map & Bản đồ nhiệt & Map of signal or performance across an area\\
-  Coverage hole & Vùng lõm sóng & Area with inadequate signal\\
-  Capacity & Dung lượng & Total traffic the network can carry\\
-  Cell overlap & Độ chồng lấn ô & Overlap between neighbouring AP coverage
-  areas\\
-  Channel plan & Quy hoạch kênh & Assignment of channels to APs\\
-  Airtime & Thời gian chiếm kênh & Time a station uses the channel\\
-  Channel utilization & Mức sử dụng kênh & Percentage of time the channel is
-  busy\\
-  Retry rate & Tỷ lệ truyền lại & Percentage of frames retransmitted\\
-  Packet capture & Bắt gói tin & Recording frames for analysis\\
-  Monitor mode & Chế độ giám sát & Radio mode capturing frames on a channel\\
-  Firmware & Phần mềm điều khiển & Embedded software of a network device\\
+  \catrow{Bảo mật}
+  Confidentiality & Tính bí mật & Bảo đảm dữ liệu chỉ có thể đọc được bởi các bên được ủy quyền hợp pháp\\
+  Integrity & Tính toàn vẹn & Bảo đảm dữ liệu không bị sửa đổi hay chèn thêm bất hợp pháp trong quá trình truyền\\
+  Encryption & Mã hóa & Biến đổi bản rõ thành bản mã nhằm ngăn chặn việc đọc trộm nội dung thông tin\\
+  Wired Equivalent Privacy (WEP) & Bảo mật tương đương mạng có dây & Chuẩn bảo mật không dây ban đầu dựa trên RC4, hiện đã lỗi thời và không an toàn\\
+  Wi-Fi Protected Access (WPA) & Truy cập Wi-Fi được bảo vệ & Bộ tiêu chuẩn và chứng nhận bảo mật không dây thay thế cho WEP\\
+  Advanced Encryption Standard (AES) & Chuẩn mã hóa nâng cao & Thuật toán mã hóa khối đối xứng được áp dụng bắt buộc trong WPA2 và WPA3\\
+  Pre-Shared Key (PSK) & Khóa chia sẻ trước & Phương thức xác thực dùng chung mật khẩu bí mật cấu hình sẵn trên các thiết bị\\
+  Simultaneous Authentication of Equals (SAE) & Xác thực đồng đẳng & Giao thức trao đổi khóa dựa trên mật khẩu có tính bảo mật chuyển tiếp trong WPA3\\
+  Protected Management Frames (PMF) & Khung quản lý được bảo vệ & Cơ chế mã hóa và bảo vệ tính toàn vẹn cho các khung quản lý unicast và broadcast\\
+  Pairwise Master Key (PMK) & Khóa chủ theo cặp & Khóa bí mật gốc làm cơ sở để dẫn xuất các khóa phiên tạm thời\\
+  Pairwise Transient Key (PTK) & Khóa tạm thời theo cặp & Tập hợp các khóa phiên đơn hướng dùng để mã hóa và kiểm tra toàn vẹn dữ liệu\\
+  Extensible Authentication Protocol (EAP) & Giao thức xác thực mở rộng & Khung giao thức hỗ trợ đóng gói nhiều phương thức xác thực người dùng khác nhau\\
+  RADIUS & Dịch vụ xác thực người dùng từ xa & Giao thức AAA tiêu chuẩn dùng kết hợp với 802.1X để xác thực người dùng tập trung\\
+  Virtual Private Network (VPN) & Mạng riêng ảo & Đường hầm mã hóa bảo mật truyền tải lưu lượng qua môi trường mạng không tin cậy\\
+  Rogue AP & AP trái phép & Điểm truy cập trái phép được gắn vào mạng nội bộ mà không có sự phê duyệt\\
+  Evil twin & AP song sinh độc hại & Điểm truy cập mạo danh phát cùng SSID của mạng hợp pháp nhằm đánh cắp thông tin\\
+  Wireless Intrusion Prevention System (WIPS) & Hệ thống ngăn chặn xâm nhập không dây & Hệ thống giám sát phổ tần vô tuyến để phát hiện và ngăn chặn các cuộc tấn công\\
+
+  \catrow{Triển khai và vận hành}
+  Site survey & Khảo sát hiện trường & Hoạt động đo đạc thực địa và mô phỏng vùng phủ sóng trước khi triển khai mạng\\
+  Heat map & Bản đồ nhiệt & Bản đồ biểu diễn trực quan cường độ tín hiệu hoặc thông lượng trên mặt bằng khu vực\\
+  Coverage hole & Vùng lõm sóng & Khu vực có cường độ tín hiệu vô tuyến yếu dưới ngưỡng yêu cầu hoạt động\\
+  Capacity & Dung lượng & Khả năng xử lý tổng lưu lượng và đáp ứng số lượng kết nối đồng thời của hệ thống\\
+  Cell overlap & Độ chồng lấn ô & Phần không gian phủ sóng giao thoa giữa các AP lân cận để hỗ trợ chuyển vùng êm dịu\\
+  Channel plan & Quy hoạch kênh & Kế hoạch phân bổ tần số kênh truyền cho các AP nhằm triệt tiêu nhiễu đồng kênh\\
+  Airtime & Thời gian chiếm kênh & Khoảng thời gian mà một trạm hoặc AP chiếm dụng môi trường truyền vô tuyến\\
+  Channel utilization & Mức sử dụng kênh & Tỷ lệ phần trăm thời gian mà kênh vô tuyến ở trạng thái bận do truyền nhận tín hiệu\\
+  Retry rate & Tỷ lệ truyền lại & Tỷ lệ phần trăm các khung dữ liệu phải gửi lại do xảy ra lỗi hoặc xung đột\\
+  Packet capture & Bắt gói tin & Kỹ thuật thu thập và ghi lại toàn bộ khung dữ liệu vô tuyến để chẩn đoán lỗi\\
+  Monitor mode & Chế độ giám sát & Chế độ hoạt động cho phép card mạng thu nhận mọi khung dữ liệu trên kênh mà không cần liên kết\\
+  Firmware & Phần mềm điều khiển & Phần mềm nhúng chuyên dụng điều khiển hoạt động phần cứng của thiết bị mạng\\
 \end{xltabular}
 \endgroup

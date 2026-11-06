@@ -1,0 +1,160 @@
+% =====================================================================
+% 02_standards_spectrum.tex
+% =====================================================================
+\begingroup
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}
+\newcolumntype{C}[1]{>{\hsize=#1\hsize\centering\arraybackslash}X}
+
+\section{Tiêu chuẩn IEEE 802.11 và phổ tần}
+\label{sec:standards}
+
+\subsection{Các thế hệ Wi-Fi}
+
+Bảng~\ref{tab:generations} tóm tắt các phiên bản sửa đổi chính của lớp PHY.
+Tên thế hệ dành cho 802.11b/a/g là cách gọi không chính thức, được đặt ra về sau.
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Các thế hệ Wi-Fi và phiên bản sửa đổi PHY.}
+  \label{tab:generations}
+  \begin{tabularx}{\linewidth}{@{} L{1.1} C{0.4} C{0.6} C{0.5} C{0.4} C{0.8} L{2.2} @{}}
+    \toprule
+    \textbf{Thế hệ / phiên bản sửa đổi} & \textbf{Năm} & \textbf{Băng tần (GHz)} & \textbf{Độ rộng tối đa (MHz)} & \textbf{QAM tối đa} & \textbf{Tốc độ PHY đỉnh} & \textbf{Công nghệ chính} \\
+    \midrule
+    -- / 802.11                     & 1997          & 2.4                  & 22                       & --               & 2~Mb/s                 & \acs{fhss}, \acs{dsss}, hồng ngoại; \acs{csmaca} \\
+    -- / 802.11b                    & 1999          & 2.4                  & 22                       & --               & 11~Mb/s                & HR-DSSS với \acs{cck} \\
+    -- / 802.11a                    & 1999          & 5                    & 20                       & 64               & 54~Mb/s                & \acs{ofdm} (52 sóng mang con) \\
+    -- / 802.11g                    & 2003          & 2.4                  & 20                       & 64               & 54~Mb/s                & \acs{ofdm} ở 2.4~GHz, tương thích với 11b \\
+    Wi-Fi~4 / 802.11n               & 2009          & 2.4, 5               & 40                       & 64               & 600~Mb/s               & \acs{mimo} (4 luồng), ghép kênh, \acs{ampdu} \\
+    Wi-Fi~5 / 802.11ac              & 2013          & 5                    & 160                      & 256              & 6.93~Gb/s              & 8 luồng, \acs{mumimo} đường xuống, tạo búp sóng (beamforming) \\
+    Wi-Fi~6/6E / 802.11ax           & 2021          & 2.4, 5, 6            & 160                      & 1024             & 9.6~Gb/s               & \acs{ofdma}, \acs{mumimo} lên/xuống, tô màu BSS, \acs{twt} \\
+    Wi-Fi~7 / 802.11be              & 2024          & 2.4, 5, 6            & 320                      & 4096             & khoảng 46~Gb/s         & \acs{mlo}, nhiều \acs{ru}, loại bỏ một phần kênh (puncturing) \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Các phiên bản sửa đổi chức năng}
+
+Bên cạnh các phiên bản sửa đổi PHY, nhiều phiên bản khác bổ sung chức năng ở
+lớp MAC. Những phiên bản tiêu biểu được liệt kê trong
+Bảng~\ref{tab:amendments}.
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Các phiên bản sửa đổi chức năng của 802.11.}
+  \label{tab:amendments}
+  \begin{tabularx}{\linewidth}{@{} L{0.5} L{0.9} L{1.6} @{}}
+    \toprule
+    \textbf{Phiên bản sửa đổi} & \textbf{Chủ đề} & \textbf{Mục đích} \\
+    \midrule
+    802.11e            & \acs{qos}                  & Truy cập kênh theo mức ưu tiên (\acs{edca}), nền tảng của \acs{wmm} \\
+    802.11h            & Quản lý phổ tần            & \acs{dfs} và \acs{tpc} để cùng tồn tại với radar ở 5~GHz \\
+    802.11i            & Bảo mật                    & \acs{ccmp}/\acs{aes}, bắt tay 4 bước (WPA2) \\
+    802.11k            & Đo lường tài nguyên vô tuyến & Báo cáo mạng lân cận và phép đo beacon hỗ trợ roaming \\
+    802.11r            & Chuyển tiếp BSS nhanh       & Giảm độ trễ chuyển vùng nhờ dẫn xuất khóa trước \\
+    802.11v            & \acs{btm}                  & Mạng có thể đề xuất \acs{ap} phù hợp hơn cho thiết bị khách \\
+    802.11w            & \acs{pmf}                  & Xác thực khung hủy xác thực và ngắt liên kết \\
+    802.11s            & Mạng mesh                  & Chuyển tiếp nhiều chặng giữa các \acp{ap} mesh \\
+    802.11u            & Kết nối liên mạng           & Nền tảng cho thỏa thuận roaming Passpoint/Hotspot~2.0 \\
+    802.11ai           & \acs{fils}                 & Xác thực ban đầu và thiết lập liên kết nhanh \\
+    802.11ad / ay      & 60~GHz (DMG / EDMG)        & Liên kết đa gigabit trong phạm vi ngắn \\
+    802.11ah           & Dưới 1~GHz (Wi-Fi HaLow)   & \ac{iot} tầm xa, công suất thấp \\
+    802.11az           & Định vị                    & Cải thiện đo khoảng cách và độ chính xác vị trí \\
+    802.11ba           & Vô tuyến đánh thức         & Đánh thức thiết bị \ac{iot} với công suất cực thấp \\
+    802.11bf           & Cảm biến WLAN              & Dùng tín hiệu Wi-Fi để phát hiện sự hiện diện và chuyển động \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Băng tần và kênh}
+
+\subsubsection{Băng tần 2,4~GHz}
+
+Dải ISM 2,4~GHz trải từ khoảng 2400 đến 2483,5~MHz, có tầm phủ và khả năng
+xuyên tường khá tốt nhưng băng thông hẹp và thường đông đúc do cùng được sử
+dụng bởi Bluetooth, Zigbee, lò vi sóng và điện thoại không dây. Các kênh cách
+nhau 5~MHz, trong khi tín hiệu rộng 20/22~MHz chồng lấn lên khoảng bốn số kênh
+kề nhau. Vì vậy, kênh 1, 6 và 11 thường được chọn để hạn chế chồng lấn \cite{cisco_rf_guide}. Tại
+Việt Nam, băng tần này sử dụng các kênh 1--13; thiết bị phải tuân thủ quy chuẩn
+kỹ thuật của \ac{vnmic}, chẳng hạn \acs{qcvn} 54:2020/BTTTT, về công suất phát
+cho phép.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \pgfmathsetmacro{\xscale}{0.83}
+    \pgfmathsetmacro{\wband}{1.43}
+    \pgfmathsetmacro{\wctrl}{0.6}
+    \pgfmathsetmacro{\hpeak}{1.6}
+
+    \foreach \n in
+    {1,...,13}{
+      \pgfmathsetmacro{\xc}{(\n - 1) * \xscale} \draw[gray!70] (\xc-\wband,0)
+      .. controls (\xc-\wctrl,\hpeak) and (\xc+\wctrl,\hpeak) ..
+      (\xc+\wband,0); \node[font=\scriptsize, anchor=north] at (\xc,-0.1)
+      {\n};
+    }
+    \foreach \n/\col in
+    {1/red, 6/blue, 11/green!50!black}{
+      \pgfmathsetmacro{\xc}{(\n - 1) * \xscale} \draw[\col,very thick]
+      (\xc-\wband,0) .. controls (\xc-\wctrl,\hpeak) and (\xc+\wctrl,\hpeak)
+      .. (\xc+\wband,0);
+    }
+    \pgfmathsetmacro{\xend}{12 * \xscale + 1.2} \draw[->] (-1.5,0)
+    -- (\xend,0);
+    \node[font=\small, anchor=north] at ({6 * \xscale},-0.6)
+    {Số kênh (tần số trung tâm $= 2407 + 5n$~MHz)};
+  \end{tikzpicture}
+  \caption{Quy hoạch kênh 2.4~GHz: các kênh 1, 6 và 11 (nét đậm) không chồng lấn.}
+  \label{fig:ch24}
+\end{figure}
+
+\subsubsection{Băng tần 5~GHz}
+
+Băng tần 5~GHz được chia thành các dải nhỏ với điều kiện sử dụng trong nhà,
+ngoài trời và giới hạn công suất khác nhau. Một số kênh yêu cầu \ac{dfs}:
+\ac{ap} phải dò tín hiệu radar và chuyển khỏi kênh nếu phát hiện radar. Tại
+Việt Nam, việc triển khai WLAN ở băng 5~GHz chịu sự quản lý chặt chẽ của
+\acs{vnmic}; thiết bị phải đáp ứng các quy chuẩn \acs{qcvn} tương ứng để được
+chứng nhận hợp quy trước khi thông quan hoặc đưa vào sử dụng. Tần số trung tâm
+của kênh 5~GHz số $n$ được tính như sau:
+\begin{equation}
+  f_c = 5000 + 5n \ \text{MHz}.
+\end{equation}
+Các kênh có thể được ghép thành kênh rộng 40, 80 hoặc 160~MHz. Tuy nhiên, kênh
+càng rộng thì số kênh độc lập càng ít và nguy cơ nhiễu đồng kênh càng cao.
+
+\subsubsection{Băng tần 6~GHz}
+
+Wi-Fi~6E và Wi-Fi~7 có thể hoạt động trên băng tần 6~GHz. Theo Thông tư
+01/2025/TT-BKHCN của Việt Nam (có hiệu lực từ ngày 15~tháng 5~năm 2025), dải
+5925--6425~MHz được phân bổ cho Wi-Fi. Mức sử dụng trong nhà được cho phép đến
+200~mW \ac{eirp} (mật độ công suất phổ \ac{psd} tối đa 10~dBm/MHz); triển khai
+ngoài trời bị giới hạn ở 25~mW \ac{eirp} (\ac{psd} tối đa 1~dBm/MHz). Không
+được lắp đặt thiết bị trên các hệ thống máy bay không người lái (\acp{uas}).
+Ở nơi được phép sử dụng băng tần 6~GHz, bắt buộc dùng WPA3 (hoặc \ac{owe}).
+
+\subsubsection{Các băng tần khác}
+
+Băng tần 60~GHz (802.11ad/ay) cung cấp tốc độ rất cao trong phạm vi vài mét,
+thường giới hạn trong một phòng. Băng tần dưới 1~GHz (802.11ah, ``HaLow'')
+đánh đổi tốc độ để tăng tầm phủ và khả năng xuyên tường, phù hợp với cảm biến
+\ac{iot}.
+
+\subsection{Quy định quản lý tần số}
+
+Tại Việt Nam, \ac{vnmic} ban hành quy hoạch phân bổ tần số và quy chuẩn kỹ
+thuật quốc gia (\acs{qcvn}), quy định các kênh WLAN được phép sử dụng, công
+suất phát, điều kiện triển khai trong nhà/ngoài trời và yêu cầu \ac{dfs}. Thiết
+bị phải được thử nghiệm, chứng nhận hợp quy và nộp bản công bố hợp quy (\ac{doc})
+theo quy định hiện hành.
+
+\begin{tomtat}
+\item Wi-Fi phát triển từ 802.11 (1997, 2~Mb/s) đến Wi-Fi~7 (802.11be: kênh 320~MHz, 4096-QAM, \acs{mlo}, tốc độ \acs{phy} lý thuyết tối đa khoảng 46~Gb/s). Tốc độ đỉnh chỉ là lý thuyết.
+\item Các bản bổ sung chức năng cho \acs{phy}: \acs{qos} (e), \acs{dfs}/\acs{tpc} (h), bảo mật (i, w), chuyển vùng (k, r, v), mesh (s), cùng các bản cho \acs{iot}, định vị và cảm biến.
+\item Băng 2,4~GHz: tầm xa, xuyên tường tốt nhưng hẹp và đông đúc; kênh 1, 6, 11 không chồng lấn; Việt Nam dùng kênh 1--13.
+\item Băng 5~GHz: nhiều kênh hơn, có thể ghép 40/80/160~MHz, một số kênh yêu cầu \acs{dfs} để tránh radar.
+\item Băng 6~GHz: theo Thông tư 01/2025/TT-BKHCN, dải 5925--6425~MHz dành cho Wi-Fi; trong nhà tối đa 200~mW \acs{eirp}, ngoài trời 25~mW, không được sử dụng trên \acs{uas}; bắt buộc WPA3 hoặc \acs{owe}.
+\item Thiết bị tại Việt Nam phải tuân thủ các quy chuẩn \acs{qcvn} do \acs{vnmic} quy định, được kiểm tra hợp quy và nộp bản \acs{doc}.
+\end{tomtat}
+\endgroup

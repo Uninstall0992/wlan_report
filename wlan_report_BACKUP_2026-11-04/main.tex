@@ -1,0 +1,69 @@
+\documentclass{article}
+
+% All packages, macros and the abbreviation database live in separate files.
+\input{preamble}
+
+\begin{document}
+\input{cover}
+
+\begin{abstract}
+  Báo cáo trình bày cơ sở lý thuyết về mạng cục bộ không dây (Wireless Local
+  Area Network -- WLAN), gồm các thế hệ Wi-Fi, tiêu chuẩn IEEE 802.11, phổ tần
+  và quy hoạch kênh, kiến trúc triển khai, cùng các cơ chế và vấn đề bảo mật.
+  Phần thực nghiệm được dành chỗ để nhóm bổ sung sau. Phụ lục cung cấp danh
+  sách từ viết tắt và bảng thuật ngữ chuyên ngành Anh--Việt.
+\end{abstract}
+
+\tableofcontents
+\clearpage
+\listoffigures
+\listoftables
+\clearpage
+
+% ---------------- Main matter (one file per part) ----------------
+\input{sections/01_introduction}
+\input{sections/02_standards_spectrum}
+\input{sections/03_architecture}
+\input{sections/03b_infrastructure_adhoc}
+\input{sections/05_device_connectivity}
+\input{sections/06_configuration_guide}
+\input{sections/04_security}
+\input{sections/07_evidence_results}
+\section{Kết luận}
+Phần báo cáo lý thuyết trình bày các khái niệm WLAN, tiêu chuẩn IEEE 802.11,
+các thành phần và mô hình triển khai, giải pháp kết nối thiết bị, nguyên tắc
+cấu hình và bảo mật. Nhóm sẽ bổ sung minh chứng và kết quả kiểm tra sau khi
+hoàn tất thực nghiệm; không xem nội dung mẫu là kết quả đã đo kiểm.
+
+\clearpage
+\renewcommand{\refname}{Tài liệu tham khảo}
+\bibliographystyle{alpha}
+\bibliography{references}
+
+\clearpage
+\section{Tỷ lệ đóng góp và minh chứng chữ ký}
+Tỷ lệ cần được nhóm thống nhất theo công việc thực tế và tổng cộng bằng 100\%.
+\begin{center}
+\begin{tabularx}{\linewidth}{c X c c}
+  \toprule
+  STT & Họ và tên & Đóng góp (\%) & Chữ ký \\
+  \midrule
+  1 & \rule{0pt}{0.8cm} & & \\
+  2 & \rule{0pt}{0.8cm} & & \\
+  3 & \rule{0pt}{0.8cm} & & \\
+  4 & \rule{0pt}{0.8cm} & & \\
+  5 & \rule{0pt}{0.8cm} & & \\
+  6 & \rule{0pt}{0.8cm} & & \\
+  \midrule
+  & Tổng & 100\% & \\
+  \bottomrule
+\end{tabularx}
+\end{center}
+
+\clearpage
+\appendix
+\input{sections/A_abbreviations}
+\clearpage
+\input{sections/B_terminology}
+
+\end{document}

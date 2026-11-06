@@ -1,0 +1,225 @@
+\begingroup
+% Kiểu cột L cho tabularx (khai báo trong nhóm riêng, theo quy ước của báo cáo).
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}
+
+\section{Hướng dẫn cấu hình bộ định tuyến và các thiết bị}
+\label{sec:configuration-guide}
+
+Phần này ghi lại quy trình cấu hình đã thực hiện trên thiết bị thật của nhóm, kèm
+các giá trị thực tế đọc được trên giao diện quản trị. Tên menu tương ứng với bản
+OpenWrt cài trên bộ định tuyến; với phần sụn của nhà sản xuất khác, tên mục có thể khác
+nhưng nguyên tắc cấu hình không đổi. Không đăng tải mật khẩu quản trị hoặc mật
+khẩu Wi-Fi thật vào báo cáo.
+
+\subsection{Thiết bị và thông số thực tế}
+\label{subsec:thiet-bi-thuc-te}
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Thông số thiết bị và cấu hình mạng đã thiết lập trên N09-Router.}
+  \label{tab:cauhinh-thucte}
+  \begin{tabularx}{\linewidth}{@{} L{0.62} L{1.38} @{}}
+    \toprule
+    \textbf{Hạng mục} & \textbf{Giá trị thực tế} \\
+    \midrule
+    Mẫu thiết bị / phần mềm & TP-Link Archer C20 v5, phần sụn OpenWrt, giao diện quản trị
+      LuCI \\
+    Tên thiết bị & \texttt{N09-Router} \\
+    Địa chỉ quản trị & \texttt{192.168.1.1} (giao diện \texttt{br-lan}),
+      \texttt{192.168.1.0/24} \\
+    MAC giao diện LAN & \texttt{B0:95:75:9F:1C:A3} \\
+    Bộ phát 2,4~GHz & MediaTek MT7628, 802.11b/g/n, kênh~6 (2,437~GHz), rộng
+      20~MHz, mã quốc gia VN \\
+    \ac{ssid} 2,4~GHz & \texttt{25CLC04-N09}, WPA2-PSK, mã hóa CCMP (AES) \\
+    Bộ phát 5~GHz & MediaTek MT7610E, 802.11ac, kênh~36 (5,180~GHz), rộng
+      80~MHz \\
+    \ac{ssid} 5~GHz & \texttt{25CLC04-N09-5G}, WPA2-PSK, mã hóa CCMP; \ac{bssid}
+      \texttt{B0:95:75:9F:1C:A2} \\
+    Mạng khách & \texttt{25CLC04-N09-Guest}, dải \texttt{192.168.20.0/24}, cổng
+      \texttt{192.168.20.1}, DHCP riêng, vùng tường lửa riêng \\
+    Cấp địa chỉ & DHCP trên \ac{lan}, thời hạn thuê 12~h; có đặt IP tĩnh theo MAC
+      cho máy bàn (\texttt{192.168.1.50}) \\
+    Cổng WAN & Chế độ DHCP client; trong sơ đồ demo cuối cùng cổng WAN không nối
+      ra Internet \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Cấu hình cơ bản trên giao diện LuCI}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Đăng nhập và đặt mật khẩu quản trị.} Máy quản trị nối vào cổng
+    LAN (hoặc vào Wi-Fi tạm), mở \texttt{http://192.168.1.1}. Router mới ở trạng
+    thái chưa có mật khẩu nên hiện cảnh báo; đặt mật khẩu cho tài khoản
+    \texttt{root} ngay từ lần đăng nhập đầu tiên. Đây là bước bắt buộc vì ai cắm
+    được dây vào cổng LAN cũng có thể thay đổi toàn bộ cấu hình.
+  \item \textbf{Đặt tên thiết bị và múi giờ.} Vào \emph{System $\rightarrow$
+    System}, đổi Hostname thành \texttt{N09-Router}, chọn múi giờ
+    \emph{Asia/Ho\_Chi\_Minh} rồi đồng bộ giờ với máy quản trị. Việc đặt đúng
+    múi giờ là điều kiện để các luật chặn theo khung giờ ở
+    Mục~\ref{subsec:cauhinh-nangcao} hoạt động đúng.
+  \item \textbf{Cấu hình \ac{lan} và DHCP.} Vào \emph{Network $\rightarrow$
+    Interfaces}, đặt địa chỉ \ac{lan} \texttt{192.168.1.1/24} và bật máy chủ DHCP
+    cho dải này. Cổng WAN để ở chế độ DHCP client để nhận địa chỉ từ modem hoặc
+    router phía trên khi cần nối Internet.
+  \item \textbf{Cấu hình Wi-Fi 2,4~GHz.} Vào \emph{Network $\rightarrow$
+    Wireless}, mở thiết bị MT7628: chọn Country Code \texttt{VN}, Mode \texttt{N},
+    Channel \texttt{6}, Width \texttt{20~MHz}; phần Interface đặt ESSID
+    \texttt{25CLC04-N09}, Mode \emph{Access Point}, Network \texttt{lan}.
+  \item \textbf{Cấu hình Wi-Fi 5~GHz.} Mở thiết bị MT7610E: Country Code
+    \texttt{VN}, Mode \texttt{AC}, Channel \texttt{36}, Width \texttt{80~MHz};
+    ESSID \texttt{25CLC04-N09-5G}.
+  \item \textbf{Cấu hình bảo mật.} Ở tab \emph{Wireless Security} của mỗi mạng,
+    chọn Encryption WPA2-PSK, Cipher \emph{Force CCMP (AES)} và đặt khóa dài, khó
+    đoán. Sau khi bấm \emph{Save \& Apply}, trang Wireless hiển thị hai mạng đang
+    phát, mỗi mạng kèm một \ac{bssid} riêng -- đúng với mô tả lý thuyết về
+    \ac{bss} và \ac{bssid}.
+\end{enumerate}
+
+\subsection{Các chức năng quản lý đã cấu hình và thử}
+\label{subsec:cauhinh-nangcao}
+
+Các chức năng dưới đây được thiết lập trên N09-Router và được quay lại trong
+video minh chứng (Mục~\ref{sec:video}). Cột ``Kết quả quan sát'' chỉ ghi những gì
+thực sự thấy trên màn hình, không suy diễn thêm.
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Các chức năng quản lý đã cấu hình trên router và kết quả quan sát.}
+  \label{tab:chucnang-router}
+  \begin{tabularx}{\linewidth}{@{} L{0.7} L{1.1} L{1.2} @{}}
+    \toprule
+    \textbf{Chức năng} & \textbf{Đường dẫn cấu hình} & \textbf{Kết quả quan sát} \\
+    \midrule
+    Ẩn tên mạng & Wireless $\rightarrow$ Hide ESSID & Mạng 2,4~GHz biến mất khỏi
+      danh sách quét của thiết bị thử, mạng 5~GHz vẫn hiện; bật lại thì mạng hiện
+      lại bình thường \\
+    Mạng khách tách riêng & Interfaces + Wireless + Firewall zone
+      \texttt{guest} & Thiết bị thử nhận địa chỉ trong dải
+      \texttt{192.168.20.0/24}, ra Internet bình thường nhưng không mở được trang
+      quản trị \texttt{192.168.1.1} \\
+    Lọc địa chỉ MAC & Wireless $\rightarrow$ MAC-Filter & Thêm MAC thiết bị thử
+      vào danh sách chặn: thiết bị bị ngắt và không kết nối lại được dù đúng mật
+      khẩu; tắt lọc thì vào lại được \\
+    Cấp IP tĩnh theo MAC & DHCP and DNS $\rightarrow$ Static Leases & Máy bàn tắt
+      rồi bật Wi-Fi, nhận đúng \texttt{192.168.1.50} như đã gán \\
+    Chặn tên miền & DHCP and DNS $\rightarrow$ DNS Records & Trỏ
+      \texttt{vnexpress.net} và \texttt{www.vnexpress.net} về \texttt{0.0.0.0}:
+      trình duyệt không mở được trang này, các trang khác vẫn bình thường; xóa
+      luật thì truy cập lại được \\
+    Giới hạn giờ truy cập & Firewall $\rightarrow$ Traffic Rules + Time
+      Restrictions & Luật chặn theo MAC nguồn ra vùng \texttt{wan}: thiết bị vẫn
+      báo có Wi-Fi nhưng không mở được trang web; tắt luật thì vào lại được \\
+    Chuyển tiếp cổng & Firewall $\rightarrow$ Port Forwards & Từ ngoài mạng, mở
+      địa chỉ WAN cổng 8080 truy cập được dịch vụ trên máy bàn; xóa luật thì
+      không còn truy cập \\
+    NAT và chẩn đoán & Firewall (Masquerading), Network $\rightarrow$
+      Diagnostics & Vùng \texttt{wan} bật Masquerading (NAT); Traceroute tới
+      \texttt{8.8.8.8} cho thấy gói tin đi qua router của mạng nhà trước khi ra
+      nhà cung cấp dịch vụ \\
+    Sao lưu cấu hình & System $\rightarrow$ Backup / Flash Firmware & Tạo được
+      tệp lưu trữ cấu hình để phục hồi khi cần \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Kết nối Laptop, Desktop và Smartphone}
+Máy bàn (Desktop) được nối bằng cáp Ethernet vào cổng LAN và cũng đã được thử
+kết nối bằng Wi-Fi để chứng minh card không dây hoạt động. Laptop và điện thoại
+được kết nối lần lượt vào mạng của nhóm; với thiết bị di động và Windows cần tắt
+tính năng \emph{địa chỉ MAC ngẫu nhiên} cho mạng này, nếu không địa chỉ MAC hiện
+trên router sẽ khác MAC thật và các luật lọc MAC ở trên sẽ không chạy đúng.
+
+Trên mỗi thiết bị, sau khi kết nối cần kiểm tra: địa chỉ IP nhận được, cổng mặc
+định (phải là \texttt{192.168.1.1}), băng tần và kênh đang dùng, kiểu bảo mật, và
+khả năng liên lạc với router cũng như với thiết bị khác trong mạng. Kết quả đo
+cụ thể được trình bày ở Mục~\ref{sec:experiment}.
+
+\subsection{Thiết lập và kiểm chứng mạng Ad-hoc (IBSS) trên nền Linux}
+\label{sec:adhoc-config}
+
+Trước khi cấu hình, cần xác nhận nền tảng có hỗ trợ chế độ ngang hàng hay không.
+Trên Windows~11, lệnh \texttt{netsh wlan show drivers} trả về dòng
+\emph{Hosted network supported: No}, nghĩa là hệ điều hành không còn hỗ trợ chế
+độ Ad-hoc (minh chứng tại Hình~\ref{fig:win-hosted}); Android và macOS cũng
+không hỗ trợ. Vì vậy quy trình dưới đây được thực hiện trên Linux, sử dụng module
+\texttt{mac80211\_hwsim} để mô phỏng phần cứng Wi-Fi và hai network namespace để
+tách hai nút thành hai máy độc lập. Không được gọi nhầm chế độ hotspot hay
+Wi-Fi Direct là \ac{ibss}.
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Kiểm tra nền tảng và tạo card Wi-Fi ảo.} Nạp module mô phỏng với
+    hai radio: \texttt{sudo modprobe mac80211\_hwsim radios=2}, sau đó kiểm tra
+    bằng \texttt{iw dev}. Mỗi radio tương ứng một giao diện (\texttt{wlan0},
+    \texttt{wlan1}) có kênh, công suất phát và thuộc tính phần cứng riêng.
+    Giao diện \texttt{P2P-device} do trình điều khiển tự tạo không ảnh hưởng
+    đến kết nối Ad-hoc.
+
+  \item \textbf{Tách mỗi radio vào một network namespace.} Nếu hai giao diện nằm
+    chung một hệ thống, chúng dùng chung bảng định tuyến nên Linux coi cả hai
+    địa chỉ IP là của chính nó và chuyển gói qua loopback, khiến lưu lượng không
+    đi qua ``sóng'' vô tuyến ảo. Thực hiện:
+    \texttt{sudo ip netns add ns1} và \texttt{sudo ip netns add ns2};
+    \texttt{sudo iw phy phy0 set netns name ns1};
+    \texttt{sudo iw phy phy1 set netns name ns2}. Kiểm tra lại bằng
+    \texttt{sudo ip netns exec ns1 iw dev} và
+    \texttt{sudo ip netns exec ns2 iw dev}.
+
+  \item \textbf{Chuyển giao diện sang chế độ \ac{ibss} và tham gia mạng.} Với
+    mỗi nút, hạ giao diện xuống trước khi đổi chế độ (nếu không, nhân hệ điều
+    hành báo lỗi \emph{Device or resource busy}). Với Node~1 trong \texttt{ns1}:
+    \texttt{sudo ip netns exec ns1 ip link set wlan0 down};
+    \texttt{sudo ip netns exec ns1 iw dev wlan0 set type ibss};
+    \texttt{sudo ip netns exec ns1 ip link set wlan0 up};
+    \texttt{sudo ip netns exec ns1 iw dev wlan0 ibss join N09-AdHoc 2437};
+    \texttt{sudo ip netns exec ns1 ip addr add 10.0.0.1/24 dev wlan0}. Tham số
+    \texttt{N09-AdHoc} là \ac{ssid} của mạng và mọi nút phải trùng;
+    \texttt{2437} là tần số tính bằng MHz, tương ứng kênh~6 của băng tần
+    2,4~GHz và cũng phải trùng giữa các nút. Node~2 thực hiện tương tự với
+    \texttt{ns2}, \texttt{wlan1} và địa chỉ \texttt{10.0.0.2/24}. Mọi lệnh đều
+    chạy trong namespace tương ứng thông qua
+    \texttt{sudo ip netns exec <namespace>}.
+
+  \item \textbf{Kiểm tra liên kết ở tầng 802.11.} Dùng
+    \texttt{iw dev wlan0 info} để xác nhận \texttt{type IBSS}, \ac{ssid},
+    kênh và tần số; dùng \texttt{iw dev wlan0 station dump} để xem danh sách nút
+    lân cận đã phát hiện. Nếu thấy địa chỉ MAC của nút còn lại ở trạng thái
+    \emph{authorized} và \emph{associated}, hai nút đã nhận ra nhau.
+
+  \item \textbf{Kiểm tra liên lạc ở tầng mạng.} Chạy
+    \texttt{ping -c 4 10.0.0.2} từ Node~1 và chiều ngược lại từ Node~2. Gói tin
+    được đóng khung 802.11, truyền qua ``sóng ảo'' của \texttt{hwsim} tới giao
+    diện của nút kia. Kết quả đạt yêu cầu khi cả hai chiều đều nhận đủ 4/4 phản
+    hồi và tỉ lệ mất gói bằng 0\,\%.
+
+  \item \textbf{Ghi nhận và dọn dẹp.} Lưu ảnh chụp màn hình từng bước vào phần
+    minh chứng (Mục~\ref{sec:evidence}) và ghi lại tham số thực tế. Sau khi kết
+    thúc, gỡ namespace và module mô phỏng để trả máy về trạng thái ban đầu.
+\end{enumerate}
+
+\subsection{Bảng ghi cấu hình thực tế}
+\begin{center}
+\begin{tabularx}{\linewidth}{X X X}
+  \toprule
+  Hạng mục & Giá trị thực tế & Minh chứng/ghi chú \\
+  \midrule
+  Mẫu thiết bị/bộ định tuyến & TP-Link Archer C20 v5, OpenWrt (LuCI), tên máy
+    \texttt{N09-Router} & Bảng~\ref{tab:cauhinh-thucte}; sơ đồ
+    Hình~\ref{fig:sodo-n09} \\
+  SSID và bảo mật & \texttt{25CLC04-N09} (2,4~GHz) và \texttt{25CLC04-N09-5G}
+    (5~GHz), WPA2-PSK/CCMP; mạng khách \texttt{25CLC04-N09-Guest} &
+    Bảng~\ref{tab:cauhinh-thucte} \\
+  LAN/DHCP & \texttt{192.168.1.1/24}, DHCP thời hạn 12~h, IP tĩnh theo MAC cho
+    máy bàn (\texttt{192.168.1.50}) & Bảng~\ref{tab:dhcp-leases} \\
+  Laptop/Desktop/Smartphone & 4 thiết bị: máy bàn nối dây, một laptop và hai
+    điện thoại Android; cả ba thiết bị không dây đều liên kết \ac{bss} 5~GHz &
+    Hình~\ref{fig:sodo-n09}, Bảng~\ref{tab:ping-crosscheck} \\
+  Ad-hoc hoặc phương án thay thế & IBSS trên Ubuntu 22.04 LTS (máy ảo VMware),
+    \texttt{mac80211\_hwsim radios=2}; \ac{ssid} \texttt{N09-AdHoc}, kênh~6
+    (2437~MHz), IP \texttt{10.0.0.1/24} và \texttt{10.0.0.2/24}, mạng mở &
+    Hình~\ref{fig:sodo-adhoc}, Hình~\ref{fig:hwsim-radios}--\ref{fig:adhoc-ping};
+    Windows~11 không hỗ trợ (Hình~\ref{fig:win-hosted}) \\
+  \bottomrule
+\end{tabularx}
+\end{center}
+
+\endgroup

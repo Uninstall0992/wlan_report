@@ -1,0 +1,29 @@
+\section{Giải pháp kết nối Laptop, Desktop và Smartphone}
+\label{sec:device-connectivity}
+
+Trong mô hình Infrastructure, các thiết bị đầu cuối kết nối tới cùng điểm truy
+cập (access point -- AP) bằng định danh mạng (SSID) và phương thức xác thực
+được cấu hình thống nhất. Sau khi liên kết lớp vô tuyến, thiết bị nhận cấu hình
+địa chỉ IP tự động qua DHCP hoặc sử dụng cấu hình tĩnh phù hợp với mạng.
+
+\subsection{Máy tính xách tay (Laptop)}
+Kiểm tra bộ điều hợp Wi-Fi đã bật và hỗ trợ băng tần, chuẩn bảo mật của AP. Chọn
+SSID, nhập thông tin xác thực, xác nhận địa chỉ IP, cổng mặc định và máy chủ DNS;
+kiểm tra kết nối mạng nội bộ và Internet.
+
+\subsection{Máy tính để bàn (Desktop)}
+Máy tính để bàn có thể dùng card Wi-Fi PCIe/USB hoặc kết nối Ethernet tới LAN.
+Nếu dùng Wi-Fi, thực hiện ghép nối như Laptop; nếu dùng Ethernet, bảo đảm cổng
+LAN của router/AP hoạt động và cấu hình IP tương thích với cùng mạng con.
+
+\subsection{Điện thoại thông minh (Smartphone)}
+Trên Android hoặc iOS, bật Wi-Fi, chọn SSID và xác thực theo chính sách của
+mạng. Với mạng doanh nghiệp, nhập thông tin 802.1X theo hướng dẫn quản trị viên.
+Không chia sẻ mật khẩu qua kênh không an toàn; ưu tiên WPA2-AES hoặc WPA3 khi
+thiết bị hỗ trợ.
+
+\subsection{Kết nối ngang hàng Ad-hoc}
+Trong mạng Ad-hoc (IBSS), các trạm tương thích kết nối trực tiếp, không qua AP.
+Khả năng hỗ trợ tùy hệ điều hành, trình điều khiển và phần cứng; Wi-Fi Direct
+là một cơ chế ngang hàng phổ biến trên thiết bị hiện đại nhưng không đồng nhất
+hoàn toàn với IBSS.

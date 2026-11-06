@@ -1,0 +1,67 @@
+\begingroup
+% Kiểu cột L cho tabularx (khai báo trong nhóm riêng, theo quy ước của báo cáo).
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}
+
+\section{Video minh chứng và bản đồ phân cảnh}
+\label{sec:video}
+
+Ngoài phần thuyết minh và các ảnh minh chứng, nhóm nộp kèm một video thực hành
+được dựng từ các clip quay màn hình và quay trực tiếp thiết bị (thư mục lưu trữ
+clip gốc và bản dựng cuối nằm trong thư mục làm việc của nhóm). Video dài khoảng
+40 phút, chia thành 26 cảnh theo 7 phần, mỗi cảnh là một clip riêng và đều có
+thuyết minh của thành viên trực tiếp thao tác, đáp ứng yêu cầu ``video có thuyết
+minh và thể hiện người cấu hình''. Nội dung video bám sát hai mô hình đã trình
+bày: mô hình hạ tầng trên router thật (Phần 1--4) và mô hình Ad-hoc trên máy ảo
+(Phần 5).
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Bản đồ phân cảnh của video minh chứng và liên hệ với báo cáo.}
+  \label{tab:bandoscanh}
+  \begin{tabularx}{\linewidth}{@{} L{0.55} L{0.95} L{1.8} L{0.7} @{}}
+    \toprule
+    \textbf{Phần} & \textbf{Cảnh} & \textbf{Nội dung và điều được chứng minh} &
+    \textbf{Mục báo cáo} \\
+    \midrule
+    0 -- Mở đầu & 01 & Giới thiệu nhóm, mục tiêu bài tập và phạm vi demo &
+      Mục giới thiệu \\
+    1 -- Giới thiệu bộ định tuyến & 02--03 & Giới thiệu mẫu thiết bị TP-Link Archer C20 v5 cài
+      OpenWrt, mặt trước/mặt sau, cách nối cáp quang, cổng WAN và các cổng LAN;
+      máy bàn cắm dây vào cổng LAN & \ref{subsec:thiet-bi-thuc-te} \\
+    2 -- Cấu hình cơ bản & 04--08 & Đăng nhập LuCI lần đầu và đặt mật khẩu quản
+      trị; đặt hostname \texttt{N09-Router} và múi giờ; đặt địa chỉ
+      \ac{lan}/DHCP; cấu hình WAN; bật Wi-Fi hai băng tần, đặt \ac{ssid} và bảo
+      mật WPA2/CCMP & \ref{sec:configuration-guide} \\
+    3 -- Kết nối thiết bị (mô hình hạ tầng) & 09--14 & Máy bàn chuyển sang Wi-Fi,
+      đọc IP/cổng/kênh/bảo mật, chạy \texttt{nmcli} và ping; laptop Windows tắt
+      MAC ngẫu nhiên rồi kết nối; Android kết nối băng 5~GHz; kiểm tra trên LuCI
+      bằng \emph{Associated Stations} và \emph{Active DHCP Leases}; ping chéo
+      giữa các thiết bị & \ref{subsec:evidence-infra},
+      \ref{tab:ping-crosscheck} \\
+    4 -- Chức năng nâng cao & 15--21 & Ẩn ESSID; tạo mạng khách tách riêng dải
+      \texttt{192.168.20.0/24}; lọc MAC; cấp IP tĩnh theo MAC; chặn tên miền qua
+      DNS; giới hạn giờ truy cập bằng luật tường lửa; chuyển tiếp cổng 8080, NAT
+      (Masquerading), traceroute và sao lưu cấu hình &
+      \ref{subsec:cauhinh-nangcao} \\
+    5 -- Mô hình Ad-hoc & 22--25 & Giải thích vì sao phải dùng máy ảo (Windows,
+      Android, macOS không hỗ trợ \ac{ibss}); tạo hai card Wi-Fi ảo bằng
+      \texttt{mac80211\_hwsim}; tách vào hai network namespace; đưa hai nút vào
+      \ac{ibss} \texttt{N09-AdHoc} ở kênh~6; kiểm tra \texttt{iw info},
+      \texttt{station dump} và ping hai chiều &
+      \ref{sec:adhoc-config}, \ref{subsec:evidence-adhoc} \\
+    6 -- Kết & 26 & Tổng kết những gì đã cấu hình và thử được, so sánh ngắn hai
+      mô hình & \ref{sec:arch} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Video cho thấy ba điều mà ảnh tĩnh không thể hiện được: (i) trạng thái router
+trước và sau mỗi lần áp dụng cấu hình, kể cả cảnh báo ``router chưa có mật
+khẩu'' ở lần đăng nhập đầu tiên; (ii) phản ứng tức thời của thiết bị đầu cuối
+khi bị chặn (mất mạng khách, bị lọc MAC, bị chặn theo giờ); và (iii) toàn bộ
+quá trình dựng mạng Ad-hoc từ lúc chưa có card mạng nào đến khi hai nút ping được
+nhau. Các số liệu được đọc trực tiếp trên màn hình trong video cũng chính là số
+liệu dùng trong Bảng~\ref{tab:dhcp-leases},
+Bảng~\ref{tab:ping-crosscheck} và Bảng~\ref{tab:adhoc-results}.
+
+\endgroup

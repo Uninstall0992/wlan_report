@@ -1,0 +1,164 @@
+% =====================================================================
+% 03b_infrastructure_adhoc.tex
+% Mo hinh Infrastructure va Ad-hoc (IBSS): doi chieu chi tiet.
+% Nguon: "Mo hinh infrastructure.docx" (My Drive > Networking) va bo anh
+% "picture source" (Picture1-Picture6). Duoc \input ngay sau
+% sections/03_architecture.tex nen cac tieu de duoi day tiep tuc danh so
+% trong cung Muc "Kien truc va cac thanh phan WLAN".
+% =====================================================================
+\begingroup
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}
+
+\subsection{Mô hình hạ tầng (Infrastructure) và mô hình tùy biến (Ad-hoc)}
+
+Trong phạm vi gia đình và doanh nghiệp nhỏ, mạng cục bộ không dây thường được
+thiết lập theo hai mô hình chính: mô hình hạ tầng (Infrastructure, có thiết bị
+trung tâm) và mô hình tùy biến hay ngang hàng (Ad-hoc). Mô hình hạ tầng là lựa
+chọn phổ biến gần như mặc định, trong khi mô hình Ad-hoc trên các thiết bị đầu
+cuối thông dụng đã dần được thay thế bởi các công nghệ ngang hàng mới hơn như
+Wi-Fi Direct, và chỉ còn tồn tại bền vững trong những dạng tiến hóa chuyên biệt
+(MANET, VANET, FANET) ở các lĩnh vực không có hạ tầng cố định.
+
+\subsubsection{Mô hình hạ tầng (Infrastructure)}
+
+Đây là một hệ thống phân cấp: một nhóm thiết bị đóng vai trò quản lý và cung cấp
+dịch vụ, nhóm còn lại đóng vai trò thụ hưởng. Ba thành phần thiết bị chính gồm:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{\acf{ap} / bộ định tuyến không dây:} phát sóng Wi-Fi (công bố
+    \ac{ssid}), nhận và chuyển tiếp dữ liệu giữa các thiết bị không dây với nhau
+    và giữa thiết bị không dây với mạng Internet nếu có. Trong hộ gia đình, thiết
+    bị này thường tích hợp thêm chức năng modem (giải điều chế tín hiệu của nhà
+    cung cấp dịch vụ) và switch (chia cổng mạng có dây).
+  \item \textbf{Thiết bị đầu cuối (\acp{sta}):} mọi thiết bị có card mạng không
+    dây (WNIC -- Wireless Network Interface Card) như máy tính xách tay, điện
+    thoại thông minh, Smart TV, camera Wi-Fi hay bóng đèn thông minh; các trạm
+    này chỉ sử dụng dịch vụ do \ac{ap} cung cấp.
+  \item \textbf{Hạ tầng dây dẫn:} cáp mạng Ethernet RJ45 hoặc cáp quang nối bộ
+    định tuyến ra bên ngoài, hoặc nối tới các switch khác trong tòa nhà; đây
+    chính là \ac{ds} đã trình bày ở Mục~\ref{sec:arch}.
+\end{itemize}
+
+\textbf{Phạm vi định danh: \ac{bss} và \ac{bssid}.} \ac{bss} là đơn vị cấu
+thành cơ bản nhất của mạng Wi-Fi theo mô hình hạ tầng: một \ac{ap} duy nhất cùng
+toàn bộ thiết bị không dây đang liên kết trực tiếp với \ac{ap} đó. Để phân biệt
+các \ac{bss} với nhau, mỗi \ac{bss} mang một mã định danh duy nhất là
+\ac{bssid}, và trong mô hình hạ tầng \ac{bssid} chính là địa chỉ MAC vật lý của
+giao diện vô tuyến trên \ac{ap}.
+
+\textbf{Mở rộng và chuyển vùng: \ac{ess}.} \ac{ess} là mô hình mở rộng, hình
+thành khi nhiều \ac{bss} (nhiều \ac{ap}) được nối với nhau qua \ac{ds} để phủ
+sóng một không gian lớn hơn. Mọi \ac{ap} trong cùng một \ac{ess} dùng chung một
+\ac{ssid} và cùng cấu hình bảo mật, mặc dù mỗi \ac{ap} vẫn sở hữu
+\ac{bssid} riêng. Nhờ đó thiết bị đầu cuối có thể di chuyển liên tục giữa các
+vùng phủ sóng mà không bị ngắt kết nối (roaming). Cần lưu ý rằng \ac{ess}
+truyền thống không có cơ chế chuyển vùng nhanh, nên việc chọn \ac{ap} nào để
+liên kết là do chính thiết bị của người dùng quyết định dựa trên cường độ tín
+hiệu; các tiêu chuẩn 802.11k/v/r sau này mới bổ sung cơ chế hỗ trợ chuyển vùng
+nhanh và cân bằng tải.
+
+\subsubsection{Mô hình tùy biến (Ad-hoc / IBSS)}
+
+Mô hình Ad-hoc là một mạng lưới phi tập trung: không có thiết bị nào làm chủ và
+tất cả các nút đều bình đẳng. Thành phần thiết bị chỉ gồm các nút không dây
+(\emph{wireless nodes}) -- chính là các thiết bị đầu cuối như máy tính xách tay
+hay máy tính để bàn gắn card/USB Wi-Fi -- và tuyệt đối không có sự xuất hiện
+của \ac{ap} hay bộ định tuyến. Mỗi nút vừa đóng vai trò máy khách (gửi yêu cầu)
+vừa đóng vai trò máy chủ/bộ định tuyến (xử lý và chuyển tiếp gói tin cho nút bên
+cạnh).
+
+\textbf{Định danh trong \ac{ibss}.} Ở mạng hạ tầng (\ac{bss}), \ac{bssid} là địa
+chỉ MAC thật của \ac{ap}. Ở mạng Ad-hoc, vì không có \ac{ap}, nút đầu tiên khởi
+tạo mạng sẽ tự sinh một địa chỉ MAC ảo ngẫu nhiên để làm \ac{bssid}; các nút
+tham gia sau đó cùng dùng chung mã \ac{bssid} ảo này để nhận diện nhau.
+
+\textbf{Duy trì mạng bằng beacon luân phiên.} Trong \ac{bss}, \ac{ap} liên tục
+phát khung beacon để thông báo mạng còn tồn tại. Trong \ac{ibss}, do các nút
+bình đẳng, tất cả các nút tham gia sẽ luân phiên nhau phát beacon theo cơ chế
+phân chia đều (beaconing chia đều), nhờ đó không cần một nguồn phát duy nhất mà
+mạng vẫn được duy trì.
+
+\textbf{Tính cô lập.} \ac{ibss} là một ``hòn đảo'' độc lập: mặc định nó không
+thể giao tiếp với hệ thống mạng có dây bên ngoài và không có kết nối Internet.
+Đây là khác biệt bản chất so với mô hình hạ tầng, nơi \ac{ds} và bộ định tuyến
+biên mở đường ra mạng ngoài.
+
+\textbf{Giới hạn công nghệ.} Mạng Ad-hoc hoạt động ổn định nhất trên các chuẩn
+Wi-Fi cũ là 802.11b, 802.11g và 802.11n ở băng tần 2,4~GHz. Về bảo mật, phần
+lớn triển khai \ac{ibss} trên hệ điều hành phổ thông chỉ hỗ trợ mã hóa
+\ac{wep} -- loại mã hóa đã bị chứng minh có thể bị phá trong vài phút -- hoặc
+buộc phải để mạng mở không mật khẩu; do đó mô hình này không phù hợp cho dữ liệu
+nhạy cảm. Ngoài ra, hiệu năng suy giảm rõ rệt khi số nút tăng, vì toàn bộ việc
+điều phối kênh diễn ra phân tán và không có thiết bị nào quản lý tài nguyên vô
+tuyến.
+
+\textbf{Tiến hóa của mô hình.} Trên các thiết bị hằng ngày như điện thoại, máy
+tính xách tay hay máy tính cá nhân, chế độ Ad-hoc đã được thay thế bằng
+Wi-Fi Direct. Đối với các mạng như MANET, VANET hay FANET, đây là phiên bản
+tiến hóa cao cấp nhất của mạng Ad-hoc: chúng vẫn thuần túy ngang hàng nhưng được
+bổ sung các giao thức định tuyến (routing protocol) rất phức tạp ở tầng mạng
+(lớp~3) để chuyển tiếp gói qua nhiều chặng, và vẫn đang được sử dụng trong những
+lĩnh vực chuyên biệt như cứu hộ -- cứu nạn, giao thông thông minh hay thiết bị
+bay không người lái.
+
+\subsubsection{Đối chiếu chi tiết giữa hai mô hình}
+
+Bảng~\ref{tab:infra-adhoc-detail} hệ thống hóa các khác biệt ở mức kiến trúc,
+định danh, vận hành và bảo mật. Bảng này bổ sung cho bảng so sánh tổng quát
+(Bảng~\ref{tab:infra-vs-adhoc}) bằng các tiêu chí cụ thể đã được kiểm chứng
+trong quá trình thực nghiệm.
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Đối chiếu chi tiết giữa mô hình hạ tầng (Infrastructure) và mô hình
+  tùy biến (Ad-hoc / IBSS).}
+  \label{tab:infra-adhoc-detail}
+  \begin{tabularx}{\linewidth}{@{} L{0.75} L{1.15} L{1.1} @{}}
+    \toprule
+    \textbf{Tiêu chí} & \textbf{Mô hình hạ tầng (Infrastructure)} & \textbf{Mô hình tùy biến (Ad-hoc / \ac{ibss})} \\
+    \midrule
+    Thiết bị trung tâm & Bắt buộc có \ac{ap} hoặc bộ định tuyến không dây đảm
+      nhiệm phát sóng và chuyển tiếp & Không có; các \ac{sta} hoàn toàn ngang
+      hàng và tự chuyển tiếp cho nhau \\
+    Đơn vị cấu thành & \ac{bss} (một \ac{ap}) mang \ac{bssid} riêng; nhiều
+      \ac{bss} ghép thành \ac{ess} & \ac{ibss}: một nhóm nút độc lập, không có
+      \ac{ap} \\
+    Nguồn \ac{bssid} & Địa chỉ MAC vật lý của giao diện vô tuyến trên \ac{ap} &
+      Địa chỉ MAC ảo sinh ngẫu nhiên bởi nút khởi tạo mạng, các nút khác dùng
+      chung \\
+    Phát beacon & \ac{ap} phát định kỳ, một nguồn phát duy nhất & Các nút luân
+      phiên phát beacon (beaconing chia đều) \\
+    Điều phối truy cập kênh & \ac{ap} giữ vai trò chủ; có thể hỗ trợ DCF hoặc
+      PCF/HCCA & Phân tán hoàn toàn, chỉ hoạt động theo DCF (\ac{csmaca}) \\
+    Cấp phát địa chỉ IP & Máy chủ DHCP tập trung trên \ac{ds} & Gán tĩnh thủ
+      công hoặc tự cấp địa chỉ nội bộ (APIPA / link-local) \\
+    Kết nối ra mạng ngoài & Có, qua \ac{ds} và bộ định tuyến biên & Mặc định
+      không có; mạng bị cô lập với \ac{lan} có dây và Internet \\
+    Mở rộng và chuyển vùng & Tốt; thêm \ac{ap} cùng \ac{ssid} là mở rộng
+      \ac{ess}, hỗ trợ chuyển vùng & Kém; mọi nút phải trùng \ac{ssid} và trùng
+      kênh, không có chuyển vùng; hiệu năng giảm khi số nút tăng \\
+    Bảo mật & Đầy đủ; hỗ trợ WPA2/WPA3, 802.1X/\ac{radius} cho doanh nghiệp &
+      Hạn chế; thực tế chỉ \ac{wep} hoặc mạng mở, không có WPA2/WPA3 \\
+    Chuẩn và băng tần & Mọi thế hệ 802.11 và mọi băng tần được cấp phép & Ổn
+      định nhất trên 802.11b/g/n, băng tần 2,4~GHz \\
+    Hỗ trợ trên hệ điều hành phổ thông & Mặc định trên Windows, Android, iOS và
+      macOS & Windows 10/11, Android và macOS không còn hỗ trợ; chỉ Linux hỗ trợ
+      qua nl80211/iw \\
+    Ứng dụng thực tế & Gia đình, văn phòng, trường học, doanh nghiệp & Chia sẻ
+      dữ liệu tạm thời, cứu nạn khẩn cấp, mạng cảm biến; nay chủ yếu được thay
+      bằng Wi-Fi Direct \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Từ đối chiếu trên có thể rút ra định hướng lựa chọn mô hình: hiệu năng, khả năng
+mở rộng, kết nối Internet và bảo mật hiện đại là những lý do khiến mô hình hạ
+tầng vẫn là mặc định cho mọi nhu cầu khai thác thực tế; mô hình Ad-hoc chỉ còn
+giá trị ở những tình huống không thể dựng hạ tầng, hoặc trong các dạng tiến hóa
+đa chặng phục vụ mục đích chuyên biệt. Chính vì giới hạn về bảo mật và khả năng
+kết nối, phần thực nghiệm của báo cáo chỉ dùng chế độ \ac{ibss} để kiểm chứng
+nguyên lý ngang hàng ở mức hai nút, và thực hiện trên nền Linux -- hệ điều hành
+duy nhất trong nhóm phổ thông còn hỗ trợ đầy đủ chế độ này
+(Mục~\ref{sec:adhoc-config} và Mục~\ref{sec:experiment}).
+
+\endgroup

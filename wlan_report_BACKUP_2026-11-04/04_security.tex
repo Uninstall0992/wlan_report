@@ -1,0 +1,201 @@
+% =====================================================================
+% 06_security.tex
+% =====================================================================
+\begingroup
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}
+
+\section{Bảo mật mạng WLAN}
+\label{sec:security}
+
+\subsection{Vì sao mạng không dây cần bảo mật mạnh?}
+
+Bất kỳ ai nằm trong vùng phủ sóng vô tuyến đều có thể thu bắt các khung dữ
+liệu. Vì vậy, một \ac{wlan} an toàn cần bảo đảm \emph{tính bí mật} (mã hóa),
+\emph{tính toàn vẹn} (phát hiện sửa đổi), \emph{xác thực} (ai đang kết nối và
+kết nối tới đâu) và \emph{tính sẵn sàng} (khả năng chống gây nhiễu và tấn công
+khung quản lý).
+
+\subsection{Các thế hệ bảo mật Wi-Fi}
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Các thế hệ cơ chế bảo mật WLAN.}
+  \label{tab:security-evolution}
+  \begin{tabularx}{\linewidth}{@{} L{0.5} L{0.3} L{1.0} L{2.2} @{}}
+    \toprule
+    \textbf{Cơ chế} & \textbf{Năm} & \textbf{Mã mật / quản lý khóa} & \textbf{Tình trạng} \\
+    \midrule
+    \acs{wep} & 1997 & RC4, IV 24 bit, khóa tĩnh & Đã bị phá; có thể khôi phục khóa trong vài phút \cite{fms2001}; không sử dụng. \\
+    \acs{wpa} & 2003 & RC4 với \acs{tkip}, \acs{psk} hoặc 802.1X & Giải pháp chuyển tiếp đã lỗi thời. \\
+    WPA2 & 2004 & \acs{aes}-\acs{ccmp}, \acs{psk} hoặc 802.1X & Được triển khai rộng; mật khẩu yếu có thể bị dò ngoại tuyến và còn lỗi dạng \acs{krack}. \\
+    WPA3 & 2018 & \acs{aes}-\acs{ccmp}/\acs{gcmp}, \acs{sae} hoặc 802.1X, bắt buộc \acs{pmf} & Khuyến nghị hiện hành \cite{wpa3spec}. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{WPA2 và quá trình bắt tay bốn bước}
+
+Trong WPA2-Personal, cụm mật khẩu (8--63 ký tự) và \ac{ssid} được đưa vào
+PBKDF2 để tạo khóa \ac{pmk} dài 256 bit:
+\begin{equation}
+  \mathrm{PMK} = \mathrm{PBKDF2}\bigl( \text{HMAC-SHA1},\ \text{passphrase},\ \text{SSID},\ 4096,\ 256 \bigr).
+\end{equation}
+Trong WPA2/WPA3-Enterprise, \ac{pmk} được tạo từ quá trình xác thực
+802.1X/\ac{eap}. Quá trình bắt tay bốn bước (Hình~\ref{fig:4way}) xác nhận cả
+hai phía đều biết \ac{pmk}, đồng thời dẫn xuất khóa phiên mới \ac{ptk} từ
+\ac{pmk}, hai địa chỉ MAC và hai số ngẫu nhiên (nonce):
+\begin{equation}
+  \mathrm{PTK} = \mathrm{PRF}\bigl( \mathrm{PMK},\ \text{``Pairwise key expansion''},\ \mathrm{AA}\,\|\,\mathrm{SPA}\,\|\,\mathrm{ANonce}\,\|\,\mathrm{SNonce} \bigr),
+\end{equation}
+Trong đó, AA và SPA lần lượt là địa chỉ MAC của bộ xác thực và thiết bị cần
+xác thực; chúng được sắp theo thứ tự min/max cố định để hai phía tính ra cùng
+một giá trị. \ac{ptk} được chia thành khóa xác nhận, khóa mã hóa khóa và khóa
+tạm thời dùng bởi \ac{ccmp}. Thông điệp~3 cũng gửi \ac{gtk} dùng cho lưu lượng
+quảng bá/đa hướng; khóa này được mã hóa và bảo vệ bằng \ac{mic}.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[font=\small,>=Stealth,node distance=0.8cm]
+    \node[font=\bfseries] (sta) {STA (thiết bị cần xác thực)};
+    \node[font=\bfseries, right=6.0cm of sta] (ap) {AP (bộ xác thực)};
+
+    \node[draw, fill=yellow!20, font=\scriptsize, below=0.4cm of sta] (pmk1)
+    {Đã có PMK};
+    \node[draw, fill=yellow!20, font=\scriptsize, below=0.4cm of ap] (pmk2)
+    {Đã có PMK};
+
+    \coordinate[below=6.5cm of pmk1] (sta_bottom);
+    \coordinate[below=6.5cm of pmk2] (ap_bottom);
+    \draw[thick] (pmk1.north) -- (sta_bottom);
+    \draw[thick] (pmk2.north) -- (ap_bottom);
+
+    % M1
+    \coordinate[below=0.6cm of pmk1] (m1_l);
+    \coordinate[below=0.6cm of pmk2] (m1_r);
+    \draw[->] (m1_r) -- (m1_l) node[midway, above,
+    font=\scriptsize]{M1: ANonce};
+    \node[anchor=west, font=\scriptsize, below=0.1cm of m1_l] {dẫn xuất PTK};
+
+    % M2
+    \coordinate[below=1.4cm of m1_l] (m2_l);
+    \coordinate[below=1.4cm of m1_r] (m2_r);
+    \draw[->] (m2_l) -- (m2_r) node[midway, above,
+    font=\scriptsize]{M2: SNonce, MIC, thông số bảo mật};
+    \node[anchor=east, font=\scriptsize, below=0.1cm of m2_r] {dẫn xuất PTK,
+    kiểm tra MIC};
+
+    % M3
+    \coordinate[below=1.4cm of m2_l] (m3_l);
+    \coordinate[below=1.4cm of m2_r] (m3_r);
+    \draw[->] (m3_r) -- (m3_l) node[midway, above,
+    font=\scriptsize]{M3: GTK (đã mã hóa), MIC, yêu cầu cài đặt khóa};
+    \node[anchor=west, font=\scriptsize, below=0.1cm of m3_l] {kiểm tra MIC,
+    cài đặt PTK/GTK};
+
+    % M4
+    \coordinate[below=1.4cm of m3_l] (m4_l);
+    \coordinate[below=1.4cm of m3_r] (m4_r);
+    \draw[->] (m4_l) -- (m4_r) node[midway, above,
+    font=\scriptsize]{M4: ACK, MIC};
+    \node[anchor=east, font=\scriptsize, below=0.1cm of m4_r] {cài đặt PTK};
+  \end{tikzpicture}
+  \caption{Quá trình bắt tay bốn bước trong WPA2/WPA3.}
+  \label{fig:4way}
+\end{figure}
+
+\subsection{WPA3}
+
+\begin{itemize}
+  \item \textbf{\ac{sae}} thay thế cơ chế trao đổi \ac{psk} bằng phương thức
+    trao đổi khóa xác thực bằng mật khẩu \cite{wpa3_overview, wpa3spec}. Bản bắt tay đã thu thập không thể bị
+    dò ngoại tuyến; mỗi lần thử đều cần tương tác với \ac{ap}, đồng thời khóa
+    có tính bảo mật chuyển tiếp.
+  \item \textbf{\ac{pmf}} (802.11w) là bắt buộc, giúp chống giả mạo khung
+    hủy xác thực và ngắt liên kết.
+  \item \textbf{Chế độ WPA3-Enterprise 192 bit} dùng \ac{gcmp}-256 và mật mã
+    đường cong elliptic 384 bit cho môi trường yêu cầu bảo mật cao.
+  \item \textbf{\ac{owe} (``Enhanced Open'')} \cite{rfc8110, wpa3_deployment} mã hóa mạng mở
+    (ví dụ mạng tại quán cà phê) mà không cần mật khẩu, thông qua trao đổi khóa
+    không xác thực, qua đó ngăn nghe lén thụ động.
+  \item \textbf{\ac{dpp}} (Wi-Fi Easy Connect) hỗ trợ kết nối ban đầu cho
+    thiết bị \ac{iot} không có giao diện người dùng bằng mã QR hoặc tương tự.
+  \item Các triển khai WPA3 ban đầu có điểm yếu về kênh kề và hạ cấp
+    (``Dragonblood''), sau đó được khắc phục bằng các bản cập nhật
+    \cite{dragonblood2020, wpa3_deployment}; cần duy trì firmware ở phiên bản mới.
+\end{itemize}
+Băng tần 6~GHz yêu cầu WPA3 (hoặc \ac{owe}), do đó các mạng Wi-Fi~6E/7 phải
+dùng cơ chế bảo mật này.
+
+\subsection{Xác thực trong mạng doanh nghiệp}
+
+IEEE 802.1X \cite{ieee8021x} định nghĩa ba vai trò: \emph{supplicant} (thiết
+bị khách cần xác thực), \emph{authenticator} (\ac{ap} hoặc bộ chuyển mạch) và
+\emph{máy chủ xác thực}, thường là máy chủ \ac{radius} \cite{rfc2865}. Bộ xác
+thực chặn toàn bộ lưu lượng ngoại trừ \ac{eapol} cho đến khi máy chủ xác nhận
+thành công; phương thức \ac{eap} \cite{rfc3748} truyền thông tin xác thực bên
+trong đường hầm \ac{tls} nếu phương thức đó hỗ trợ.
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Một số phương thức EAP phổ biến.}
+  \label{tab:eap}
+  \begin{tabularx}{\linewidth}{@{} L{0.6} L{1.2} L{1.2} @{}}
+    \toprule
+    \textbf{Phương thức} & \textbf{Thông tin xác thực} & \textbf{Ghi chú} \\
+    \midrule
+    EAP-TLS & Chứng chỉ máy khách và máy chủ & Mạnh nhất; cần hạ tầng khóa công khai (PKI) và phân phối chứng chỉ \\
+    \acs{peap} / EAP-TTLS & Chứng chỉ máy chủ; tên người dùng và mật khẩu trong đường hầm & Phổ biến; phải xác minh chứng chỉ máy chủ để tránh lộ thông tin \\
+    EAP-FAST & Thông tin xác thực truy cập được bảo vệ & Do Cisco khởi xướng; không yêu cầu chứng chỉ \\
+    EAP-SIM / AKA & Thẻ SIM & Chuyển tải Wi-Fi của nhà mạng di động \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Mối đe dọa và biện pháp đối phó}
+
+\begin{table}[!htbp]
+  \centering\footnotesize
+  \caption{Các mối đe dọa WLAN thường gặp và biện pháp phòng vệ.}
+  \label{tab:threats}
+  \begin{tabularx}{\linewidth}{@{} L{0.7} L{1.15} L{1.15} @{}}
+    \toprule
+    \textbf{Mối đe dọa} & \textbf{Mô tả} & \textbf{Biện pháp đối phó} \\
+    \midrule
+    Nghe lén & Thu thụ động khung trên mạng mở hoặc mã hóa yếu & WPA2/WPA3; \acs{owe} cho mạng khách mở \\
+    \acs{ap} trái phép & \acs{ap} không được cấp phép kết nối vào mạng có dây & \acs{wips}, bảo vệ cổng mạng, quét định kỳ \\
+    AP giả mạo (evil twin) & \acs{ap} giả bắt chước \acs{ssid} hợp pháp để đánh lừa thiết bị khách & 802.1X có xác minh chứng chỉ máy chủ, \acs{wips} \\
+    Tấn công ngắt xác thực/liên kết & Khung quản lý giả khiến thiết bị mất kết nối & \acs{pmf} (802.11w), WPA3 \\
+    Dò cụm mật khẩu ngoại tuyến & Dùng từ điển thử với bản bắt tay WPA2 đã thu thập & Cụm mật khẩu dài, ngẫu nhiên; \acs{sae}, 802.1X \\
+    Cài đặt lại khóa (\acs{krack}) & Phát lại thông điệp bắt tay để đặt lại nonce \cite{krack2017} & Cập nhật thiết bị khách và \acp{ap} \\
+    Lạm dụng mã PIN \acs{wps} & Dò vét cạn mã PIN ngắn của Wi-Fi Protected Setup & Tắt \acs{wps} \\
+    Phân đoạn mạng yếu & Thiết bị khách hoặc \ac{iot} bị chiếm quyền truy cập hệ thống nội bộ & \acp{vlan}, tường lửa, cô lập thiết bị khách \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Tăng cường bảo mật}
+
+\begin{itemize}
+  \item Dùng WPA3 (hoặc chỉ WPA2-\acs{aes}); tắt \acs{wep},
+    \acs{wpa}/\acs{tkip} và \acs{wps}.
+  \item Ưu tiên 802.1X dùng chứng chỉ cho mạng doanh nghiệp; với mạng cá nhân/
+    \acs{psk}, dùng cụm mật khẩu ngẫu nhiên dài ít nhất 16 ký tự.
+  \item Bật \acs{pmf}; cập nhật firmware cho \ac{ap} và bộ điều khiển.
+  \item Tách lưu lượng doanh nghiệp, khách, thoại và \ac{iot} vào các \acp{vlan}
+    riêng kèm quy tắc tường lửa; bật cô lập thiết bị khách trên \acp{ssid} dành
+    cho khách.
+  \item Triển khai \acs{wips} hoặc chức năng phát hiện \ac{ap} trái phép; theo
+    dõi nhật ký để phát hiện lỗi xác thực lặp lại.
+  \item Không dựa vào \acp{ssid} ẩn hoặc lọc \acs{mac}; các biện pháp này gần
+    như không tăng bảo mật và dễ dàng bị vượt qua.
+\end{itemize}
+
+\begin{tomtat}
+\item Ai trong vùng phủ sóng cũng có thể bắt khung, nên \acs{wlan} cần đảm bảo bảo mật, toàn vẹn, xác thực và tính sẵn sàng.
+\item Tiến hóa: \acs{wep} (đã bị phá), \acs{wpa}/\acs{tkip}, WPA2 (\acs{aes}-\acs{ccmp}, bắt tay bốn bước; còn rủi ro dò mật khẩu ngoại tuyến và \acs{krack}), WPA3.
+\item WPA3: \acs{sae} thay \acs{psk} để chống dò ngoại tuyến, \acs{pmf} bắt buộc, chế độ Enterprise 192-bit, \acs{owe} mã hóa mạng mở, \acs{dpp} đăng ký thiết bị \acs{iot}.
+\item Doanh nghiệp dùng 802.1X (supplicant, authenticator, máy chủ \acs{radius}) với \acs{eap}; \acs{eap}-\acs{tls} mạnh nhất, \acs{peap}/\acs{eap}-TTLS phổ biến nhưng phải kiểm tra chứng chỉ máy chủ.
+\item Các mối đe dọa chính: nghe lén, rogue \acs{ap}, evil twin, tấn công deauthentication, dò mật khẩu, \acs{krack}, lạm dụng \acs{wps}, phân đoạn yếu.
+\item Củng cố: dùng WPA3 (hoặc WPA2-\acs{aes}), tắt \acs{wep}/\acs{tkip}/\acs{wps}, bật \acs{pmf}, dùng mật khẩu ngẫu nhiên dài từ 16 ký tự, phân tách \acs{vlan}, triển khai \acs{wips} và cập nhật firmware. \acs{ssid} ẩn và lọc \acs{mac} không phải là biện pháp bảo mật.
+\end{tomtat}
+\endgroup

@@ -1,0 +1,106 @@
+\section{Hướng dẫn cấu hình Router và các thiết bị}
+\label{sec:configuration-guide}
+
+Các bước dưới đây là quy trình khái quát; tên menu và khả năng tùy chọn phụ thuộc
+nhà sản xuất/model. Trước khi thao tác, ghi nhận model, phiên bản firmware, sơ đồ
+kết nối và trạng thái ban đầu. Không đăng tải thông tin quản trị hoặc mật khẩu.
+
+\subsection{Cấu hình Router/điểm truy cập}
+\begin{enumerate}
+  \item Kết nối máy quản trị với cổng LAN hoặc giao diện quản lý an toàn; đăng
+    nhập bằng thông tin hợp lệ và đổi mật khẩu quản trị mặc định.
+  \item Cập nhật firmware từ nguồn chính thức; sao lưu cấu hình hiện hành nếu
+    thiết bị hỗ trợ.
+  \item Cấu hình kết nối WAN theo thông số nhà cung cấp dịch vụ; đặt địa chỉ
+    LAN, mặt nạ mạng và DHCP phù hợp, tránh trùng dải địa chỉ đang dùng.
+  \item Bật Wi-Fi cho băng tần cần sử dụng; đặt SSID, chọn kênh/kênh rộng phù
+    hợp môi trường và cấu hình WPA2-AES hoặc WPA3-Personal với mật khẩu mạnh.
+  \item Tắt WPS và dịch vụ quản trị từ WAN nếu không cần; lưu cấu hình, khởi
+    động lại khi thiết bị yêu cầu và ghi lại các giá trị đã thiết lập.
+\end{enumerate}
+
+\subsection{Kết nối Laptop, Desktop và Smartphone}
+Trên mỗi thiết bị, bật Wi-Fi, chọn đúng SSID và xác thực; với Desktop dùng cáp,
+kết nối vào cổng LAN. Kiểm tra địa chỉ IP, gateway và DNS nhận được, sau đó
+kiểm tra lần lượt khả năng liên lạc với gateway, thiết bị cùng mạng và Internet.
+Ghi kết quả thực tế vào phần thử nghiệm; không điền kết quả dự kiến như kết quả
+đo được.
+
+\subsection{Thiết lập và kiểm chứng mạng Ad-hoc (IBSS) trên nền Linux}
+\label{sec:adhoc-config}
+
+Trước khi cấu hình, cần xác nhận nền tảng có hỗ trợ chế độ ngang hàng hay không.
+Trên Windows~11, lệnh \texttt{netsh wlan show drivers} trả về dòng
+\emph{Hosted network supported: No}, nghĩa là hệ điều hành không còn hỗ trợ chế
+độ Ad-hoc (minh chứng tại Hình~\ref{fig:win-hosted}); Android và macOS cũng
+không hỗ trợ. Vì vậy quy trình dưới đây được thực hiện trên Linux, sử dụng module
+\texttt{mac80211\_hwsim} để mô phỏng phần cứng Wi-Fi và hai network namespace để
+tách hai nút thành hai máy độc lập. Không được gọi nhầm chế độ hotspot hay
+Wi-Fi Direct là \ac{ibss}.
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Kiểm tra nền tảng và tạo card Wi-Fi ảo.} Nạp module mô phỏng với
+    hai radio: \texttt{sudo modprobe mac80211\_hwsim radios=2}, sau đó kiểm tra
+    bằng \texttt{iw dev}. Mỗi radio tương ứng một giao diện (\texttt{wlan0},
+    \texttt{wlan1}) có kênh, công suất phát và thuộc tính phần cứng riêng.
+    Giao diện \texttt{P2P-device} do trình điều khiển tự tạo không ảnh hưởng
+    đến kết nối Ad-hoc.
+
+  \item \textbf{Tách mỗi radio vào một network namespace.} Nếu hai giao diện nằm
+    chung một hệ thống, chúng dùng chung bảng định tuyến nên Linux coi cả hai
+    địa chỉ IP là của chính nó và chuyển gói qua loopback, khiến lưu lượng không
+    đi qua ``sóng'' vô tuyến ảo. Thực hiện:
+    \texttt{sudo ip netns add ns1} và \texttt{sudo ip netns add ns2};
+    \texttt{sudo iw phy phy0 set netns name ns1};
+    \texttt{sudo iw phy phy1 set netns name ns2}. Kiểm tra lại bằng
+    \texttt{sudo ip netns exec ns1 iw dev} và
+    \texttt{sudo ip netns exec ns2 iw dev}.
+
+  \item \textbf{Chuyển giao diện sang chế độ \ac{ibss} và tham gia mạng.} Với
+    mỗi nút, hạ giao diện xuống trước khi đổi chế độ (nếu không, nhân hệ điều
+    hành báo lỗi \emph{Device or resource busy}). Với Node~1 trong \texttt{ns1}:
+    \texttt{sudo ip netns exec ns1 ip link set wlan0 down};
+    \texttt{sudo ip netns exec ns1 iw dev wlan0 set type ibss};
+    \texttt{sudo ip netns exec ns1 ip link set wlan0 up};
+    \texttt{sudo ip netns exec ns1 iw dev wlan0 ibss join demoAdhoc 2437};
+    \texttt{sudo ip netns exec ns1 ip addr add 10.0.0.1/24 dev wlan0}. Tham số
+    \texttt{demoAdhoc} là \ac{ssid} của mạng và mọi nút phải trùng; \texttt{2437}
+    là tần số tính bằng MHz, tương ứng kênh~6 của băng tần 2,4~GHz và cũng phải
+    trùng giữa các nút. Node~2 thực hiện tương tự với \texttt{ns2},
+    \texttt{wlan1} và địa chỉ \texttt{10.0.0.2/24}. Mọi lệnh đều chạy trong
+    namespace tương ứng thông qua \texttt{sudo ip netns exec <namespace>}.
+
+  \item \textbf{Kiểm tra liên kết ở tầng 802.11.} Dùng
+    \texttt{iw dev wlan0 info} để xác nhận \texttt{type IBSS}, \ac{ssid},
+    kênh và tần số; dùng \texttt{iw dev wlan0 station dump} để xem danh sách nút
+    lân cận đã phát hiện. Nếu thấy địa chỉ MAC của nút còn lại ở trạng thái
+    \emph{authorized} và \emph{associated}, hai nút đã nhận ra nhau.
+
+  \item \textbf{Kiểm tra liên lạc ở tầng mạng.} Chạy
+    \texttt{ping -c 4 10.0.0.2} từ Node~1. Gói tin được đóng khung 802.11, truyền
+    qua ``sóng ảo'' của \texttt{hwsim} tới giao diện của Node~2. Kết quả đạt yêu
+    cầu khi nhận đủ 4/4 phản hồi và tỉ lệ mất gói bằng 0\,\%.
+
+  \item \textbf{Ghi nhận và dọn dẹp.} Lưu ảnh chụp màn hình từng bước vào phần
+    minh chứng (Mục~\ref{sec:evidence}) và ghi lại tham số thực tế. Sau khi kết
+    thúc, gỡ namespace và module mô phỏng để trả máy về trạng thái ban đầu.
+\end{enumerate}
+
+\subsection{Bảng ghi cấu hình thực tế}
+\begin{center}
+\begin{tabularx}{\linewidth}{X X X}
+  \toprule
+  Hạng mục & Giá trị thực tế & Minh chứng/ghi chú \\
+  \midrule
+  Model Router/AP & & \\
+  SSID và bảo mật & & \\
+  LAN/DHCP & & \\
+  Laptop/Desktop/Smartphone & & \\
+  Ad-hoc hoặc phương án thay thế & IBSS trên Ubuntu 22.04 LTS (máy ảo
+    VMware), \texttt{mac80211\_hwsim radios=2}; \ac{ssid} \texttt{demoAdhoc},
+    kênh~6 (2437~MHz), IP \texttt{10.0.0.1/24} và \texttt{10.0.0.2/24}, mạng mở
+    & Hình~\ref{fig:hwsim-radios}--\ref{fig:adhoc-ping}; Windows~11 không hỗ trợ
+    (Hình~\ref{fig:win-hosted}) \\
+  \bottomrule
+\end{tabularx}
+\end{center}

@@ -1,0 +1,27 @@
+\begin{tikzpicture}
+\node[dev,minimum width=4.8cm,align=left,anchor=north] (n1) at (3,-1.25) {%
+  \textbf{\color{chude}Node 1} -- namespace \texttt{ns1}\\
+  Giao diện \texttt{wlan0} (\texttt{phy0})\\
+  MAC \texttt{02:00:00:00:00:00}\\
+  IP tĩnh \textbf{10.0.0.1/24}\\
+  Chế độ IBSS, SSID \texttt{N09-AdHoc}};
+\node[dev,minimum width=4.8cm,align=left,anchor=north] (n2) at (13,-1.25) {%
+  \textbf{\color{chude}Node 2} -- namespace \texttt{ns2}\\
+  Giao diện \texttt{wlan1} (\texttt{phy1})\\
+  MAC \texttt{02:00:00:00:01:00}\\
+  IP tĩnh \textbf{10.0.0.2/24}\\
+  Chế độ IBSS, SSID \texttt{N09-AdHoc}};
+\draw[{Stealth[length=3mm]}-{Stealth[length=3mm]},line width=1.2pt,chude,dash pattern=on 6pt off 3pt]
+  (n1.east) -- node[lab,above=3pt]{\textbf{IBSS} \texttt{N09-AdHoc}\\kênh 6 (2437 MHz), 20 MHz}
+  node[lab,below=3pt]{liên lạc trực tiếp,\\không qua AP} (n2.east -| n2.west);
+\node[dev,fill=nhat,minimum width=14.6cm,anchor=north] (air) at (8,-4.6)
+  {\textbf{Môi trường vô tuyến mô phỏng} -- module nhân \texttt{mac80211\_hwsim radios=2}
+   \quad (giao diện giám sát \texttt{hwsim0})};
+\draw[wifi] (n1.south) -- (n1.south |- air.north);
+\draw[wifi] (n2.south) -- (n2.south |- air.north);
+\node[region,fit=(n1)(n2)(air),inner sep=8pt,yshift=4pt] (vm) {};
+\node[ttl,anchor=south west] at (vm.north west) {Máy thật Windows 11 \;$\rightarrow$\; VMware \;$\rightarrow$\; máy ảo Ubuntu 22.04 LTS};
+\node[font=\scriptsize,text=gray!70!black,anchor=north] at (vm.south)
+  {Không có AP \quad$\cdot$\quad không có DHCP (gán IP tĩnh) \quad$\cdot$\quad không có Internet
+   \quad$\cdot$\quad BSSID ngẫu nhiên \quad$\cdot$\quad các nút luân phiên phát beacon (100 TU)};
+\end{tikzpicture}

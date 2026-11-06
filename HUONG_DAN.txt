@@ -1,0 +1,31 @@
+HUONG DAN - BAO CAO WLAN NHOM 09 (pdfLaTeX / Overleaf)
+======================================================
+
+BIEN DICH TREN OVERLEAF
+- Tai thu muc nay len Overleaf (New Project > Upload Project, chon file zip).
+- Menu > Compiler: pdfLaTeX. Main document: main.tex.
+- Goi su dung deu co san tren Overleaf (vntex, babel vietnamese, mathptmx...).
+
+CAP NHAT REPO TREN GOOGLE DRIVE
+1. Chep vao thu muc goc repo (chon THAY THE): main.tex, N09_WLAN-video.txt,
+   thu muc sodo/. Thu muc figures/: GOP vao figures cu, khong xoa anh cu.
+2. Chep figures/N09_sodo1..3.png (va .pdf) vao thu muc "so do" de thay ban cu.
+3. Chuyen vao old/ (khong con dung): sections/, preamble.tex, cover.tex,
+   acronyms.tex, references.bib, main.pdf cu.
+
+ANH CAN CO SAN TRONG figures/ (lay tu repo hien tai, goi nay khong chua):
+   N09_luci_wifi_24ghz.png, N09_luci_wifi_5ghz.png, N09_luci_static_lease.png,
+   N09_ping_crosscheck.png, Picture2.png, Picture3.png, Picture4.png, Picture6.png
+
+PHAN CON THIEU (dien sau)
+- MSSV, email cua Vu (bia + Bang A)
+- Chu ky: figures/chuky/khanh.png, vu.png, tuan.png, hoang.png, minh.png
+- Anh hop: figures/bienban/hop1.png, hop2.png, hop3.png + noi dung 3 bien ban
+- Cot "Nhiem vu chinh" va ty le % trong Bang B
+- Doi ten video thanh N09_WLAN_video.mp4, bat chia se "Bat ky ai co lien ket"
+- (Tuy chon) logo truong: figures/logo_hcmus.png se tu hien tren bia
+
+SUA SO DO: sua sodo/sodoX.tex, bien dich sodo/N09_sodoX_sa.tex bang pdfLaTeX,
+chep PDF ra figures/N09_sodoX.pdf.
+
+N09_WLAN_banthao.pdf: ban xem truoc (anh chua co hien khung trong).

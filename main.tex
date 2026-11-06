@@ -1,43 +1,1291 @@
-\documentclass{article}
+% =====================================================================
+%  CTT105 - Mang may tinh | BTVN#6: Tim hieu mang WLAN | Nhom 09 - 25C04
+%  Biên dịch: XeLaTeX (Overleaf: Menu > Compiler > XeLaTeX)
+%  Anh: figures/ ; chu ky: figures/chuky/
+% =====================================================================
+\documentclass[12pt,a4paper]{article}
 
-% All packages, macros and the abbreviation database live in separate files.
-\input{preamble}
+% ---------------- Che do ban thao ------------------------------------
+% \banthaotrue : hien cac duong ke cho trong can dien.
+% \banthaofalse: ban nop chinh thuc.
+\newif\ifbanthao
+\banthaotrue
 
-\title{
-  Wireless Local Area Networks\\
-  Mạng cục bộ không dây
-}
-\author{Tuấn}
-\date{\today}
+% ---------------- Ngon ngu, font -------------------------------------
+\usepackage{fontspec}
+\usepackage[vietnamese]{babel}
+\setmainfont{TeX Gyre Termes}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{DejaVu Sans Mono}
+\usepackage{microtype}
 
+% ---------------- Trang, khoang cach ---------------------------------
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=3cm,right=2cm,
+headheight=15pt]{geometry}
+\usepackage{setspace}
+\setstretch{1.25}
+\setlength{\parindent}{1.2em}
+\setlength{\parskip}{0.35em}
+\setlength{\emergencystretch}{3em}
+
+% ---------------- Goi chuc nang --------------------------------------
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs,array,tabularx,longtable,multirow}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric,fit,backgrounds}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{qrcode}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage[hidelinks]{hyperref}
+\usepackage{bookmark}
+\graphicspath{{./}{figures/}}
+
+% Mau cho so do TikZ: chi dung thang xam
+\definecolor{chude}{gray}{0.10}
+\definecolor{nhat}{gray}{0.93}
+\definecolor{vien}{gray}{0.55}
+\definecolor{canhbao}{gray}{0.25}
+
+% ---------------- Tieu de muc ----------------------------------------
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries\itshape}{\thesubsubsection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.6em}{0.8em}
+\titlespacing*{\subsection}{0pt}{1.2em}{0.5em}
+\titlespacing*{\subsubsection}{0pt}{0.9em}{0.3em}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+\pretocmd{\section}{\needspace{8\baselineskip}}{}{}
+\pretocmd{\subsection}{\needspace{5\baselineskip}}{}{}
+
+% ---------------- Dau trang, chan trang ------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape Đồ án WLAN -- Nhóm 09}
+\fancyhead[R]{\small\itshape CTT105 -- Mạng máy tính}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}%
+\renewcommand{\headrulewidth}{0pt}}
+
+% ---------------- Chu thich, danh so ---------------------------------
+\captionsetup{font=small,labelfont=bf,labelsep=colon,justification=centering,skip=6pt}
+\captionsetup[table]{position=top}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+\addto\captionsvietnamese{%
+  \renewcommand{\listfigurename}{Danh mục hình ảnh}%
+  \renewcommand{\listtablename}{Danh mục bảng}%
+  \renewcommand{\refname}{Tài liệu tham khảo}%
+\renewcommand{\contentsname}{Mục lục}}
+
+% ---------------- Danh sach, bang ------------------------------------
+\setlist{nosep,topsep=0.3em,leftmargin=1.6em}
+\setlist[enumerate]{label=\arabic*.}
+\renewcommand{\arraystretch}{1.2}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% ---------------- Ma lenh --------------------------------------------
+\lstset{basicstyle=\ttfamily\small,frame=lines,framesep=4pt,xleftmargin=1em,
+  breaklines=true,columns=fullflexible,keepspaces=true,
+commentstyle=\itshape,aboveskip=0.6em,belowskip=0.6em}
+
+% ---------------- Macro ----------------------------------------------
+\newcommand{\fillin}[1][3cm]{\ifbanthao\rule[-2pt]{#1}{0.4pt}\else\rule[-2pt]{#1}{0.4pt}\fi}
+\newcommand{\kiemtra}[1]{#1}
+\newcommand{\anhhoackhung}[2]{%
+  \IfFileExists{figures/#2}{\includegraphics[width=#1,height=0.5\textheight,keepaspectratio]{#2}}%
+  {\fbox{\parbox[c][4cm][c]{\dimexpr#1-2\fboxsep-2\fboxrule\relax}{\centering\small
+[Chưa có ảnh: \texttt{figures/\detokenize{#2}}]}}}}
+\newcommand{\hinh}[4][0.92\linewidth]{%
+  \begin{figure}[H]\centering\anhhoackhung{#1}{#2}\caption{#3}\label{#4}
+\end{figure}}
+\newcommand{\chuky}[1]{\IfFileExists{figures/chuky/#1}%
+  {\includegraphics[height=1.30cm,width=3.20cm,keepaspectratio]{chuky/#1}}%
+{\rule{0pt}{1.15cm}}}
+\newcommand{\mono}[1]{\texttt{#1}}
+
+% =====================================================================
 \begin{document}
-\maketitle
 
-\begin{abstract}
-  This document covers the definition and evolution of Wi-Fi, the spectrum and
-  channel plans, network architecture and deployment models, and security.
-  Appendices provide a list of abbreviations and an
-  English--Vietnamese terminology table.
-\end{abstract}
+% ============================ BIA ====================================
+\begin{titlepage}
+  \centering
+  {\large ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH\par}
+  {\large\bfseries TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN\par}
+  {\large\bfseries KHOA CÔNG NGHỆ THÔNG TIN\par}
+  \vspace{0.15cm}
+  \rule{4cm}{0.5pt}\par
+  \vspace{1.2cm}
+  \IfFileExists{figures/logo_hcmus.png}{\includegraphics[height=3.2cm]{logo_hcmus.png}\par\vspace{1.2cm}}%
+  {\IfFileExists{figures/logo_fit.png}{\includegraphics[height=3.2cm]{logo_fit.png}\par\vspace{1.2cm}}{\vspace{2.5cm}}}
+  {\large BÁO CÁO ĐỒ ÁN LÝ THUYẾT\par}
+  \vspace{0.2cm}
+  {\large Học phần: CTT105 -- Mạng máy tính\par}
+  \vspace{1.0cm}
+  {\LARGE\bfseries TÌM HIỂU MẠNG WLAN\par}
+  \vspace{0.3cm}
+  {\large BTVN\#6 -- Mã đồ án: WLAN\par}
+  \vspace{1.4cm}
+  {\large\bfseries Nhóm 09 -- Lớp 25C04\par}
+  \vspace{0.5cm}
+  \begin{tabular}{@{}l l l@{}}
+    \toprule
+    \textbf{STT} & \textbf{MSSV} & \textbf{Họ và tên}\\
+    \midrule
+    1 & 25127076 & Nguyễn Quốc Khánh (Trưởng nhóm)\\
+    2 & 25127555 & Đỗ Tấn Hoàng Vũ\\
+    3 & 25127542 & Đàm Anh Tuấn\\
+    4 & 21127610 & Hà Huy Hoàng\\
+    5 & 25127425 & Trương Hồng Minh\\
+    \bottomrule
+  \end{tabular}
+  \vfill
+  {\large Giảng viên hướng dẫn: Huỳnh Thị Bảo Trân\par}
+  \vspace{0.9cm}
+  {\large Thành phố Hồ Chí Minh, tháng 11 năm 2026\par}
+\end{titlepage}
 
+\pagenumbering{roman}
+\setcounter{page}{2}
+
+% ========================= LOI CAM ON ================================
+\section*{Lời cảm ơn}
+\addcontentsline{toc}{section}{Lời cảm ơn}
+Nhóm 09 xin gửi lời cảm ơn chân thành đến cô Huỳnh Thị Bảo Trân, giảng viên
+học phần Mạng máy tính, đã hướng dẫn và định hướng nội dung để nhóm hoàn thành
+đồ án \emph{Tìm hiểu mạng WLAN}. Những yêu cầu cụ thể của đồ án, từ phần lý
+thuyết đến phần cấu hình thực tế có minh chứng, đã giúp nhóm hiểu rõ hơn cách
+một mạng không dây gia đình được xây dựng, vận hành và bảo vệ.
+
+Quá trình thực hiện cũng giúp các thành viên rèn luyện kỹ năng đọc tài liệu
+tiếng Anh chuyên ngành, cấu hình thiết bị mạng, kiểm thử, ghi nhận minh chứng
+và phối hợp làm việc nhóm. Dù đã cố gắng, báo cáo khó tránh khỏi thiếu sót;
+nhóm rất mong nhận được góp ý của cô để hoàn thiện hơn.
+
+\vspace{1em}
+\hfill
+\begin{tabular}{c}\textit{TP. Hồ Chí Minh, ngày 06 tháng 11 năm 2026}\\
+  \textbf{Nhóm 09 -- Lớp 25C04}
+\end{tabular}
+
+% ===================== THONG TIN NHOM VA VIDEO =======================
+\clearpage
+\section*{Thông tin nhóm và tỷ lệ đóng góp}
+\addcontentsline{toc}{section}{Thông tin nhóm và tỷ lệ đóng góp}
+
+\begin{table}[H]
+  \centering\small
+  \caption*{\textbf{Bảng A.} Thông tin thành viên nhóm 09}
+  \begin{tabularx}{\linewidth}{@{}c l l L@{}}
+    \toprule
+    \textbf{STT} & \textbf{MSSV} & \textbf{Họ và tên} & \textbf{Email}\\
+    \midrule
+    1 & 25127076 & Nguyễn Quốc Khánh (Trưởng nhóm) & \mono{nqkhanh2510@clc.fitus.edu.vn}\\
+    2 & 25127555 & Đỗ Tấn Hoàng Vũ & \mono{dthvu2518@clc.fitus.edu.vn}\\
+    3 & 25127542 & Đàm Anh Tuấn & \mono{datuan2535@clc.fitus.edu.vn}\\
+    4 & 21127610 & Hà Huy Hoàng & \mono{hhhoang21@clc.fitus.edu.vn}\\
+    5 & 25127425 & Trương Hồng Minh & \mono{thminh2518@clc.fitus.edu.vn}\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{table}[H]
+  \centering\small
+  \caption*{\textbf{Bảng B.} Phân công và tỷ lệ đóng góp (có chữ ký xác nhận)}
+  \begin{tabularx}{\linewidth}{@{}c P{3.6cm} L c >{\centering\arraybackslash}p{3.4cm}@{}}
+    \toprule
+    \textbf{STT} & \textbf{Họ và tên} & \textbf{Tỷ lệ} & \textbf{Chữ ký}\\
+    \midrule
+    1 & Nguyễn Quốc Khánh & 100\,\% & \chuky{khanh.png}\\
+    2 & Đỗ Tấn Hoàng Vũ   & 100\,\% & \chuky{vu.png}\\
+    3 & Đàm Anh Tuấn      & 100\,\% & \chuky{tuan.png}\\
+    4 & Hà Huy Hoàng      & 100\,\% & \chuky{hoang.png}\\
+    5 & Trương Hồng Minh  & 80\,\% & \chuky{minh.png}\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection*{Video thực hành}
+\noindent
+\begin{minipage}[c]{0.76\linewidth}
+  \begin{tabular}{@{}l l@{}}
+    Tệp video & \mono{N09\_WLAN\_video.mp4}\\
+    Thời lượng & 40 phút 13 giây\\
+    Dựng video & Nguyễn Quốc Khánh\\
+  \end{tabular}
+
+  \smallskip
+  {\raggedright\noindent Liên kết:\\
+  {\small\url{https://youtu.be/FPLgrdk_lfI}}\par}
+  \noindent Liên kết cũng được lưu trong tệp \mono{N09\_WLAN\_video.txt} nộp kèm. Bản đồ
+  phân cảnh ở Phụ lục~\ref{app:video}.
+\end{minipage}\hfill
+\begin{minipage}[c]{0.2\linewidth}\centering
+  \qrcode[height=2.4cm]{https://youtu.be/FPLgrdk_lfI}
+\end{minipage}
+
+% ========================= MUC LUC ===================================
+\clearpage
 \tableofcontents
+\clearpage
 \listoffigures
 \listoftables
 \clearpage
+\pagenumbering{arabic}
 
-% ---------------- Main matter (one file per part) ----------------
-\input{sections/01_introduction}
-\input{sections/02_standards_spectrum}
-\input{sections/03_architecture}
-\input{sections/04_security}
+% =====================================================================
+\section{Giới thiệu đồ án}
+\label{sec:gioithieu}
 
-% ---------------- Appendices ----------------
+\subsection{Mục tiêu}
+Đồ án tìm hiểu mạng cục bộ không dây (WLAN) và triển khai thực tế một mạng
+WLAN gia đình theo hai mô hình \emph{Infrastructure} và \emph{Ad-hoc}. Cụ thể,
+nhóm hướng tới bốn mục tiêu:
+\begin{enumerate}
+  \item Hệ thống hóa khái niệm, thành phần và chuẩn kỹ thuật của WLAN.
+  \item Phân tích hai mô hình triển khai và giải pháp kết nối cho Laptop,
+    Desktop và Smartphone.
+  \item Cấu hình một bộ định tuyến thật thành mạng WLAN mang tên nhóm, kết nối các
+    loại thiết bị và kiểm tra bằng minh chứng cụ thể.
+  \item Dựng và kiểm chứng một mạng Ad-hoc tối thiểu hai nút.
+\end{enumerate}
+
+\subsection{Phạm vi}
+Đồ án giới hạn trong mạng gia đình và văn phòng nhỏ: một điểm truy cập, một
+mạng con IPv4 và các thiết bị đầu cuối phổ thông. Các giải pháp doanh nghiệp
+(bộ điều khiển WLC, xác thực 802.1X, mạng nhiều AP) chỉ được giới thiệu ở mức
+khái niệm để làm rõ vị trí của mô hình gia đình.
+
+\subsection{Thiết bị và môi trường thực hiện}
+\begin{table}[H]
+  \centering\small
+  \caption{Thiết bị và phần mềm sử dụng trong đồ án}
+  \label{tab:thietbi}
+  \begin{tabularx}{\linewidth}{@{}P{3.4cm} L@{}}
+    \toprule
+    \textbf{Hạng mục} & \textbf{Chi tiết}\\
+    \midrule
+    Router / AP & TP-Link Archer C20 v5 (AC750), firmware OpenWrt
+    25.12.6, giao diện quản trị LuCI; tên thiết bị \mono{N09-Router}\\
+    Desktop & Máy bàn chạy Linux Mint, có card Wi-Fi (hostname \mono{luckmintpc})\\
+    Laptop & Laptop Windows (thao tác: Đỗ Tấn Hoàng Vũ)\\
+    Smartphone & Điện thoại Android (thao tác: Đỗ Tấn Hoàng Vũ); Redmi Note 14 (Đàm Anh Tuấn) làm máy thử\\
+    Máy thử phía WAN & Laptop Arch Linux (của Nguyễn Quốc Khánh, thao tác: Đàm Anh Tuấn), dùng để truy cập từ mạng gia đình ở các cảnh cần Internet\\
+    Mô hình Ad-hoc & Máy ảo Ubuntu 22.04 LTS trên VMware, module
+    \mono{mac80211\_hwsim} (thao tác: Hà Huy Hoàng)\\
+    Công cụ & Trình duyệt web, \mono{nmcli}, \mono{iw}, \mono{ip}, \mono{ping},
+    \mono{netsh}, \mono{ipconfig}; OBS Studio để quay màn hình\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Cấu trúc báo cáo}
+Mục~\ref{sec:khainiem}--\ref{sec:baomat} trình bày lý thuyết: khái niệm,
+thành phần, hai mô hình và bảo mật. Mục~\ref{sec:giaiphap} là giải pháp kết
+nối cho từng loại thiết bị. Mục~\ref{sec:infra} và \ref{sec:adhoc} là phần
+thực nghiệm; Mục~\ref{sec:ketqua} tổng hợp kết quả, đối chiếu với yêu cầu đề
+và thảo luận.
+
+% =====================================================================
+\section{Khái niệm và tiêu chuẩn WLAN}
+\label{sec:khainiem}
+
+\subsection{Khái niệm WLAN}
+\textbf{WLAN} (Wireless Local Area Network) là mạng cục bộ trong đó các thiết
+bị trao đổi dữ liệu bằng sóng vô tuyến thay vì cáp. Hầu hết WLAN hiện nay xây
+dựng trên họ chuẩn \textbf{IEEE~802.11}, với tên thương mại \emph{Wi-Fi} do
+Wi-Fi Alliance chứng nhận \cite{ieee80211,gast2005}. Về phạm vi, WLAN nằm giữa
+mạng cá nhân không dây (WPAN, vài mét, ví dụ Bluetooth) và mạng diện rộng không
+dây (WWAN, hàng kilômét, ví dụ mạng di động 4G/5G).
+
+Khác với Ethernet, môi trường truyền của WLAN là không gian dùng chung: mọi
+thiết bị trong vùng phủ cùng nghe một kênh. Từ đặc điểm này sinh ra cả ưu
+điểm lẫn hạn chế của WLAN (Bảng~\ref{tab:uunhuoc}).
+
+\begin{table}[H]
+  \centering\small
+  \caption{Ưu điểm và hạn chế của WLAN so với LAN có dây}
+  \label{tab:uunhuoc}
+  \begin{tabularx}{\linewidth}{@{}L L@{}}
+    \toprule
+    \textbf{Ưu điểm} & \textbf{Hạn chế}\\
+    \midrule
+    Thiết bị di chuyển tự do trong vùng phủ sóng &
+    Băng thông chia sẻ giữa mọi thiết bị trên cùng kênh\\
+    Triển khai nhanh, không cần đi dây tới từng vị trí &
+    Chất lượng phụ thuộc khoảng cách, vật cản và nhiễu\\
+    Dễ mở rộng bằng cách thêm điểm truy cập &
+    Độ trễ cao và dao động hơn mạng có dây\\
+    Phù hợp với thiết bị di động và IoT &
+    Sóng lan ra ngoài nên bắt buộc phải mã hóa và xác thực\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Các thế hệ chuẩn IEEE 802.11}
+Chuẩn 802.11 gốc (1997) chỉ đạt 2~Mb/s. Các bản sửa đổi sau đó tăng tốc độ
+nhờ điều chế bậc cao hơn, kênh rộng hơn và nhiều luồng không gian (MIMO).
+Bảng~\ref{tab:thehe} tóm tắt các thế hệ chính; tốc độ trong bảng là tốc độ
+lớp vật lý lý thuyết tối đa, thông lượng thực tế thấp hơn nhiều
+\cite{perahia2013}.
+
+\begin{table}[H]
+  \centering\small
+  \caption{Các thế hệ chuẩn IEEE 802.11}
+  \label{tab:thehe}
+  \begin{tabularx}{\linewidth}{@{}l c c c c L@{}}
+    \toprule
+    \textbf{Chuẩn} & \textbf{Tên gọi} & \textbf{Năm} & \textbf{Băng tần (GHz)} &
+    \textbf{Tốc độ tối đa} & \textbf{Công nghệ chính}\\
+    \midrule
+    802.11   & --         & 1997 & 2,4         & 2 Mb/s    & DSSS, FHSS, CSMA/CA\\
+    802.11b  & --         & 1999 & 2,4         & 11 Mb/s   & DSSS/CCK\\
+    802.11a  & --         & 1999 & 5           & 54 Mb/s   & OFDM\\
+    802.11g  & --         & 2003 & 2,4         & 54 Mb/s   & OFDM, tương thích 802.11b\\
+    802.11n  & Wi-Fi 4    & 2009 & 2,4 / 5     & 600 Mb/s  & MIMO 4 luồng, kênh 40 MHz\\
+    802.11ac & Wi-Fi 5    & 2013 & 5           & 6,9 Gb/s  & 256-QAM, kênh 160 MHz, MU-MIMO đường xuống\\
+    802.11ax & Wi-Fi 6/6E & 2021 & 2,4 / 5 / 6 & 9,6 Gb/s  & OFDMA, 1024-QAM, TWT\\
+    802.11be & Wi-Fi 7    & 2024 & 2,4 / 5 / 6 & $\approx$46 Gb/s & 4096-QAM, kênh 320 MHz, MLO\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Ngoài các bản sửa đổi lớp vật lý, nhiều bản sửa đổi bổ sung chức năng cho lớp
+MAC: 802.11e (chất lượng dịch vụ), 802.11i và 802.11w (bảo mật, bảo vệ khung
+quản lý), 802.11k/v/r (hỗ trợ chuyển vùng) và 802.11s (mạng mesh).
+
+Router dùng trong đồ án là loại AC750: băng 2,4~GHz theo 802.11n (tối đa
+300~Mb/s) và băng 5~GHz theo 802.11ac (tối đa 433~Mb/s).
+
+\subsection{Băng tần và kênh}
+\begin{itemize}
+  \item \textbf{2,4~GHz} (2400--2483,5 MHz): tầm phủ xa, xuyên tường tốt nhưng
+    trong quy hoạch thường dùng, các kênh 20~MHz 1, 6 và 11 được xem là không
+    chồng lấn; số kênh và mức chồng lấn thực tế phụ thuộc khu vực pháp lý,
+    băng thông và quy hoạch kênh. Việt Nam cho phép kênh 1--13.
+  \item \textbf{5~GHz}: nhiều kênh hơn, ít nhiễu, ghép được kênh 40/80/160~MHz.
+    Một số kênh phải dùng cơ chế DFS để nhường kênh khi phát hiện radar.
+  \item \textbf{6~GHz}: dùng cho Wi-Fi 6E/7. Tại Việt Nam, Thông tư
+    01/2025/TT-BKHCN cho phép dải 5925--6425~MHz \cite{tt012025}; theo yêu cầu
+    chứng nhận của Wi-Fi Alliance, mạng ở băng này phải dùng WPA3 hoặc OWE.
+\end{itemize}
+Thiết bị phát Wi-Fi lưu hành tại Việt Nam phải tuân thủ quy chuẩn kỹ thuật quốc
+gia (QCVN) về tần số và công suất. Vì vậy khi cấu hình router, nhóm đặt mã quốc
+gia \mono{VN} để router chỉ dùng kênh và công suất được phép.
+
+\subsection{Vị trí của WLAN trong mô hình OSI}
+IEEE 802.11 chỉ định nghĩa hai tầng thấp nhất \cite{kurose2012}:
+\begin{itemize}
+  \item \textbf{Tầng vật lý (PHY)}: điều chế (DSSS, OFDM, QAM), tần số, kênh
+    và công suất phát.
+  \item \textbf{Tầng liên kết dữ liệu}: gồm phân tầng \textbf{MAC 802.11}
+    (truy cập kênh theo CSMA/CA, xác nhận ACK, định địa chỉ khung, mã hóa) và
+    phân tầng \textbf{LLC 802.2} che đi khác biệt giữa mạng có dây và không
+    dây đối với tầng mạng.
+\end{itemize}
+Từ tầng mạng trở lên (IP, TCP/UDP, ứng dụng), một thiết bị Wi-Fi hoạt động y
+hệt thiết bị cắm dây. Do đó WLAN vẫn cần các dịch vụ IP như DHCP và DNS
+(Mục~\ref{subsec:dichvu}).
+
+Điểm khác biệt quan trọng của tầng MAC là cơ chế \textbf{CSMA/CA}
+(\emph{tránh} xung đột) thay cho CSMA/CD của Ethernet: thiết bị vô tuyến không
+thể vừa phát vừa nghe để phát hiện xung đột. Trước khi phát, trạm lắng nghe
+kênh và chờ một khoảng ngẫu nhiên (backoff); mỗi khung unicast phải được bên
+nhận trả về ACK.
+
+% =====================================================================
+\section{Thành phần của mạng WLAN}
+\label{sec:thanhphan}
+
+\subsection{Thành phần phần cứng}
+\begin{table}[H]
+  \centering\small
+  \caption{Các thành phần phần cứng của WLAN}
+  \label{tab:thanhphan}
+  \begin{tabularx}{\linewidth}{@{}P{3.8cm} L@{}}
+    \toprule
+    \textbf{Thành phần} & \textbf{Vai trò}\\
+    \midrule
+    Trạm (Station -- STA) & Thiết bị đầu cuối có giao tiếp 802.11: laptop, điện
+    thoại, máy bàn có card Wi-Fi, camera, thiết bị IoT\\
+    Card mạng không dây (WNIC) & Bộ thu phát vô tuyến của trạm, gắn liền bo mạch
+    hoặc rời (PCIe, USB); mang địa chỉ MAC của trạm\\
+    Điểm truy cập (Access Point -- AP) & Phát sóng, quản lý các trạm liên kết và
+    làm cầu nối giữa mạng không dây với mạng có dây\\
+    Bộ định tuyến không dây & Thiết bị gia đình tích hợp AP, switch, bộ định tuyến, máy
+    chủ DHCP, NAT và tường lửa trong một hộp\\
+    Hệ thống phân phối (DS) & Hạ tầng nối các AP với nhau và với mạng ngoài,
+    thường là Ethernet và switch\\
+    Bộ điều khiển WLAN (WLC) & Quản lý tập trung nhiều AP trong doanh nghiệp
+    (cấu hình, kênh, công suất, chuyển vùng)\\
+    Ăng-ten & Bức xạ và thu sóng; quyết định hình dạng vùng phủ\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Trong mạng gia đình, toàn bộ AP, switch, DS và router thường nằm trong một
+thiết bị duy nhất. Router TP-Link Archer C20 của nhóm là ví dụ: một hộp có hai
+bộ phát vô tuyến (2,4 và 5~GHz), bốn cổng LAN, một cổng WAN và phần mềm định
+tuyến OpenWrt.
+
+\subsection{Thành phần định danh}
+\begin{itemize}
+  \item \textbf{SSID} (Service Set Identifier): tên mạng dài tối đa 32 byte,
+    được AP quảng bá trong khung beacon để người dùng chọn mạng.
+  \item \textbf{BSSID}: định danh 48 bit của một BSS. Trong mô hình
+    Infrastructure, BSSID chính là địa chỉ MAC của giao diện vô tuyến trên AP;
+    một router hai băng tần có hai BSSID khác nhau dù có thể cùng SSID.
+  \item \textbf{Địa chỉ MAC}: địa chỉ 48 bit của card mạng. Bit thấp thứ hai (U/L) của
+    byte đầu tiên cho biết địa chỉ do nhà sản xuất cấp (bit = 0) hay được gán
+    cục bộ (bit = 1). Các hệ điều hành hiện đại dùng \emph{địa chỉ MAC ngẫu
+    nhiên} (gán cục bộ) cho từng mạng Wi-Fi để bảo vệ quyền riêng tư; điều này
+    ảnh hưởng trực tiếp tới các chức năng lọc theo MAC của router
+    (Mục~\ref{subsec:macngaunhien}).
+\end{itemize}
+
+\subsection{Dịch vụ IP đi kèm}
+\label{subsec:dichvu}
+\begin{itemize}
+  \item \textbf{DHCP} cấp tự động địa chỉ IP, mặt nạ mạng, cổng mặc định và DNS
+    cho trạm qua bốn bước Discover -- Offer -- Request -- Acknowledge (DORA).
+  \item \textbf{DNS} phân giải tên miền thành địa chỉ IP. Router gia đình
+    thường làm máy chủ DNS chuyển tiếp cho mạng nội bộ.
+  \item \textbf{Cổng mặc định (default gateway)} là địa chỉ LAN của router,
+    nơi trạm gửi mọi gói tin đi ra ngoài mạng con.
+  \item \textbf{NAT} cho phép mọi thiết bị dùng địa chỉ riêng (ví dụ
+    192.168.1.0/24) chia sẻ một địa chỉ phía WAN để ra Internet.
+\end{itemize}
+
+\subsection{Quá trình một trạm gia nhập mạng}
+Hình~\ref{fig:ketnoi} mô tả các bước một trạm thực hiện để vào được mạng
+WPA2-Personal và có địa chỉ IP. Đây cũng là trình tự cần kiểm tra khi kết nối
+thất bại (Mục~\ref{subsec:loi}).
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[font=\small,
+      msg/.style={-{Stealth[length=2mm]},thick,chude},
+      lbl/.style={fill=white,inner sep=1.5pt,font=\footnotesize},
+    phase/.style={font=\footnotesize\bfseries,text=canhbao,anchor=west}]
+    \node[draw=chude,fill=nhat,minimum width=2.6cm,minimum height=0.7cm] (sta) at (0,0) {Trạm (STA)};
+    \node[draw=chude,fill=nhat,minimum width=2.6cm,minimum height=0.7cm] (ap) at (7,0) {AP / Router};
+    \draw[vien,dashed] (sta.south) -- ++(0,-10.2);
+    \draw[vien,dashed] (ap.south) -- ++(0,-10.2);
+    \draw[msg,dashed] (7,-0.9) -- node[lbl]{Beacon (SSID, khả năng, bảo mật)} (0,-0.9);
+    \draw[msg] (0,-1.6) -- node[lbl]{Probe Request} (7,-1.6);
+    \draw[msg] (7,-2.2) -- node[lbl]{Probe Response} (0,-2.2);
+    \draw[msg] (0,-3.0) -- node[lbl]{Authentication (Open System)} (7,-3.0);
+    \draw[msg] (7,-3.6) -- node[lbl]{Authentication Response} (0,-3.6);
+    \draw[msg] (0,-4.4) -- node[lbl]{Association Request} (7,-4.4);
+    \draw[msg] (7,-5.0) -- node[lbl]{Association Response (AID)} (0,-5.0);
+    \draw[msg] (7,-5.8) -- node[lbl]{EAPOL-Key 1/4 (ANonce)} (0,-5.8);
+    \draw[msg] (0,-6.35) -- node[lbl]{EAPOL-Key 2/4 (SNonce, MIC)} (7,-6.35);
+    \draw[msg] (7,-6.9) -- node[lbl]{EAPOL-Key 3/4 (GTK, MIC)} (0,-6.9);
+    \draw[msg] (0,-7.45) -- node[lbl]{EAPOL-Key 4/4 (xác nhận cài khóa)} (7,-7.45);
+    \draw[msg] (0,-8.3) -- node[lbl]{DHCP Discover} (7,-8.3);
+    \draw[msg] (7,-8.85) -- node[lbl]{DHCP Offer} (0,-8.85);
+    \draw[msg] (0,-9.4) -- node[lbl]{DHCP Request} (7,-9.4);
+    \draw[msg] (7,-9.95) -- node[lbl]{DHCP ACK (IP, gateway, DNS)} (0,-9.95);
+    \node[phase] at (7.3,-1.9) {Dò tìm};
+    \node[phase] at (7.3,-3.3) {Xác thực 802.11};
+    \node[phase] at (7.3,-4.7) {Liên kết};
+    \node[phase] at (7.3,-6.62) {Bắt tay 4 bước (WPA2)};
+    \node[phase] at (7.3,-9.12) {Cấp địa chỉ IP (DORA)};
+  \end{tikzpicture}
+  \caption{Trình tự một trạm gia nhập mạng WPA2-Personal và nhận địa chỉ IP}
+  \label{fig:ketnoi}
+\end{figure}
+
+% =====================================================================
+\section{Mô hình triển khai: Infrastructure và Ad-hoc}
+\label{sec:mohinh}
+
+Chuẩn 802.11 tổ chức mạng thành các \emph{tập dịch vụ} (service set). Có hai
+cách tổ chức cơ bản: có điểm truy cập trung tâm (Infrastructure) và không có
+điểm truy cập (Ad-hoc).
+
+\subsection{Mô hình Infrastructure}
+\subsubsection{Khái niệm và thành phần}
+Trong mô hình Infrastructure, mọi trạm liên kết với một AP và mọi khung dữ
+liệu đều đi qua AP, kể cả khi hai trạm nằm cạnh nhau. Mô hình gồm ba nhóm
+thành phần: AP hoặc router không dây làm trung tâm; các trạm đầu cuối; và hạ
+tầng có dây (DS) nối AP với mạng ngoài. Hình~\ref{fig:thanhphan} minh họa các
+thành phần này trong một mạng gia đình điển hình.
+
+\hinh[\linewidth]{N09_sodo3.pdf}{Các thành phần của mạng WLAN gia đình theo mô hình Infrastructure: một router tích hợp tạo BSS 1, AP thứ hai nối qua hệ thống phân phối tạo BSS 2, hai BSS cùng SSID hợp thành một ESS}{fig:thanhphan}
+
+\subsubsection{BSS, ESS và chuyển vùng}
+\begin{itemize}
+  \item \textbf{BSS} (Basic Service Set) là đơn vị cơ bản: một AP cùng các trạm
+    đang liên kết với nó, định danh bằng BSSID.
+  \item \textbf{ESS} (Extended Service Set) gồm nhiều BSS nối qua DS, dùng
+    chung SSID và cấu hình bảo mật để phủ sóng diện rộng. Mỗi AP vẫn giữ BSSID
+    riêng.
+  \item \textbf{Chuyển vùng (roaming)}: trong ESS, trạm tự quyết định chuyển
+    sang AP có tín hiệu tốt hơn mà vẫn giữ địa chỉ IP nếu cùng mạng con. Các
+    bản sửa đổi 802.11k/v/r giúp quá trình này nhanh và chính xác hơn.
+\end{itemize}
+
+\subsection{Mô hình Ad-hoc (IBSS)}
+\subsubsection{Khái niệm và thành phần}
+Mô hình Ad-hoc, trong chuẩn gọi là \textbf{IBSS} (Independent BSS), gồm các
+trạm liên lạc trực tiếp với nhau, không có AP. Thành phần chỉ là các trạm có
+card Wi-Fi hỗ trợ chế độ IBSS, cùng cấu hình chung \textbf{SSID} và
+\textbf{kênh}. Các đặc điểm kỹ thuật chính:
+\begin{itemize}
+  \item \textbf{BSSID ngẫu nhiên}: trạm khởi tạo mạng sinh một BSSID ngẫu
+    nhiên dạng gán cục bộ; các trạm gia nhập sau dùng chung BSSID này.
+  \item \textbf{Beacon phân tán}: không có AP nên các trạm cùng chịu trách
+    nhiệm phát beacon. Sau mỗi chu kỳ beacon, mỗi trạm chờ một khoảng ngẫu
+    nhiên; trạm nào phát trước thì các trạm khác hủy lượt phát của mình.
+  \item \textbf{Không có dịch vụ tập trung}: không có DHCP nên địa chỉ IP phải
+    gán tĩnh hoặc tự cấu hình (link-local). Mạng mặc định cô lập, không có
+    Internet trừ khi một nút được cấu hình thêm làm cổng ra.
+  \item \textbf{Một chặng}: IBSS cơ bản chỉ cho các trạm trong tầm sóng của
+    nhau liên lạc trực tiếp; trạm \emph{không} tự chuyển tiếp gói cho trạm
+    khác. Muốn truyền qua nhiều chặng phải bổ sung giao thức định tuyến
+    (MANET với AODV, OLSR, B.A.T.M.A.N.) hoặc dùng mesh 802.11s.
+\end{itemize}
+
+\subsubsection{Tình trạng hỗ trợ hiện nay}
+IBSS hỗ trợ bảo mật kém hơn mô hình Infrastructure: giao diện của nhiều hệ
+điều hành cũ chỉ cho WEP hoặc mạng mở, dù trên Linux có thể chạy IBSS với
+WPA2-PSK thông qua \mono{wpa\_supplicant}. Khả năng tạo IBSS trên hệ điều hành phổ thông hiện không đồng nhất, phụ thuộc
+phiên bản, driver và phần cứng; Linux thường cung cấp công cụ cấu hình trực
+tiếp đầy đủ hơn. Android và iOS thường không cung cấp giao diện người dùng để
+tạo IBSS. Nhu cầu kết nối trực tiếp giữa hai thiết bị nay thường được đáp ứng
+bằng \textbf{Wi-Fi Direct}. Cần lưu ý Wi-Fi
+Direct \emph{không phải} IBSS: một thiết bị được bầu làm \emph{Group Owner} và
+hoạt động như một AP mềm, còn các thiết bị khác liên kết vào như trạm thường.
+
+Ad-hoc vẫn có giá trị trong các mạng chuyên dụng không có hạ tầng: MANET (cứu
+hộ, quân sự), VANET (liên lạc giữa xe), FANET (bầy máy bay không người lái) và
+mạng cảm biến. Các mạng này dựa trên IBSS hoặc mesh, cộng thêm giao thức định
+tuyến nhiều chặng.
+
+\subsection{So sánh và lựa chọn mô hình}
+\begin{table}[H]
+  \centering\small
+  \caption{So sánh mô hình Infrastructure và Ad-hoc}
+  \label{tab:sosanh}
+  \begin{tabularx}{\linewidth}{@{}P{3.1cm} L L@{}}
+    \toprule
+    \textbf{Tiêu chí} & \textbf{Infrastructure (BSS/ESS)} & \textbf{Ad-hoc (IBSS)}\\
+    \midrule
+    Thiết bị trung tâm & Bắt buộc có AP/router & Không có\\
+    Đường đi dữ liệu & Mọi khung đi qua AP & Trực tiếp giữa hai trạm\\
+    Định danh BSS & BSSID = MAC vô tuyến của AP & BSSID ngẫu nhiên do trạm đầu tiên sinh\\
+    Beacon & Do AP phát & Các trạm luân phiên phát\\
+    Cấp địa chỉ IP & DHCP trên router & Gán tĩnh hoặc link-local\\
+    Kết nối Internet & Có, qua router và NAT & Mặc định không có\\
+    Bảo mật & WPA2/WPA3, 802.1X, quản lý tập trung & Hạn chế, phụ thuộc hệ điều hành và driver\\
+    Mở rộng & Thêm AP thành ESS, có chuyển vùng & Kém, hiệu năng giảm khi nhiều nút\\
+    Hỗ trợ trên hệ điều hành & Mọi hệ điều hành & Phụ thuộc hệ điều hành, driver và phần cứng\\
+    Ứng dụng & Gia đình, văn phòng, trường học & Kết nối tạm thời, MANET, cảm biến\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Với mạng gia đình, Infrastructure là lựa chọn phù hợp vì có Internet, cấp
+địa chỉ tự động, bảo mật hiện đại và quản lý tập trung. Ad-hoc chỉ phù hợp khi
+không có hạ tầng hoặc để nghiên cứu nguyên lý kết nối ngang hàng, đúng như
+cách nhóm sử dụng nó trong Mục~\ref{sec:adhoc}.
+
+% =====================================================================
+\section{Bảo mật WLAN}
+\label{sec:baomat}
+Sóng vô tuyến lan ra ngoài phạm vi ngôi nhà, nên bất kỳ ai trong vùng phủ đều
+thu được khung tin. Bảo mật WLAN vì vậy phải bảo đảm cả xác thực (chỉ người có
+quyền mới vào được) và mã hóa (người nghe lén không đọc được dữ liệu).
+
+\begin{table}[H]
+  \centering\small
+  \caption{Các thế hệ cơ chế bảo mật Wi-Fi}
+  \label{tab:baomat}
+  \begin{tabularx}{\linewidth}{@{}l P{3.6cm} L@{}}
+    \toprule
+    \textbf{Cơ chế} & \textbf{Mã hóa / xác thực} & \textbf{Đánh giá}\\
+    \midrule
+    WEP & RC4, khóa tĩnh & Đã bị phá hoàn toàn \cite{fms2001}; không được dùng\\
+    WPA & TKIP & Giải pháp tạm thời, đã lỗi thời\\
+    WPA2 & AES-CCMP, bắt tay 4 bước & Phổ biến nhất; chế độ PSK có thể bị dò mật
+    khẩu ngoại tuyến nếu mật khẩu yếu; lỗ hổng KRACK \cite{krack2017} đã được vá\\
+    WPA3 & AES-CCMP/GCMP, SAE & Chống dò mật khẩu ngoại tuyến, bắt buộc bảo vệ
+    khung quản lý (PMF) \cite{wpa3spec}\\
+    OWE & Mã hóa không cần mật khẩu & Dành cho mạng công cộng mở (Wi-Fi Enhanced Open)\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Mỗi chuẩn WPA có hai chế độ xác thực:
+\begin{itemize}
+  \item \textbf{Personal (PSK/SAE)}: mọi người dùng chung một mật khẩu; phù hợp
+    gia đình.
+  \item \textbf{Enterprise (802.1X)}: mỗi người dùng xác thực riêng qua EAP
+    với máy chủ RADIUS; phù hợp doanh nghiệp. Chế độ này \emph{bắt buộc} phải
+    có máy chủ RADIUS. Nếu chọn nhầm chế độ Enterprise trên router gia đình,
+    SSID nhiều khả năng sẽ không hoạt động được (một tình huống nhóm gặp thực tế, xem
+    Mục~\ref{subsec:nhanxet}).
+\end{itemize}
+
+Các mối đe dọa thường gặp gồm nghe lén, dò mật khẩu PSK, AP giả mạo (rogue
+AP, evil twin), tấn công hủy xác thực (deauthentication) để ngắt kết nối, và
+khai thác lỗ hổng WPS. Với mạng gia đình, nhóm đề xuất các biện pháp tối thiểu:
+\begin{enumerate}
+  \item Dùng WPA3 hoặc WPA2 với AES-CCMP; tắt WEP, TKIP và WPS.
+  \item Đặt mật khẩu Wi-Fi dài, ngẫu nhiên; đổi mật khẩu quản trị router ngay
+    lần đăng nhập đầu tiên.
+  \item Bật bảo vệ khung quản lý (PMF/802.11w) nếu thiết bị hỗ trợ.
+  \item Tách mạng khách khỏi mạng chính; cập nhật firmware định kỳ.
+  \item Không xem ẩn SSID hay lọc MAC là biện pháp bảo mật chính: SSID vẫn lộ
+    trong khung dò tìm và địa chỉ MAC có thể bị giả mạo.
+\end{enumerate}
+
+% =====================================================================
+\section{Giải pháp kết nối và cấu hình thiết bị}
+\label{sec:giaiphap}
+
+\subsection{Yêu cầu chung}
+Để một thiết bị vào được mạng Infrastructure cần bốn điều kiện: (1) có card
+Wi-Fi và driver hoạt động; (2) card hỗ trợ băng tần và chuẩn bảo mật mà AP
+dùng (ví dụ card chỉ có 2,4~GHz sẽ không thấy mạng 5~GHz); (3) biết đúng SSID
+và mật khẩu; (4) nhận được cấu hình IP, thường qua DHCP. Sau khi kết nối, mọi
+thiết bị cần được kiểm tra theo cùng một trình tự: địa chỉ IP thuộc đúng mạng
+con, cổng mặc định là địa chỉ router, ping tới router thành công, rồi ping tới
+thiết bị khác hoặc ra Internet.
+
+Máy bàn (Desktop) thường không có sẵn Wi-Fi. Có ba lựa chọn: lắp card Wi-Fi
+PCIe, dùng USB Wi-Fi, hoặc nối cáp Ethernet vào cổng LAN của router. Trong đồ
+án, máy bàn của nhóm có card Wi-Fi nên được kết nối bằng Wi-Fi để đúng yêu cầu
+đề bài.
+
+\subsection{Thao tác theo từng hệ điều hành}
+\begin{table}[H]
+  \centering\small
+  \caption{Thao tác kết nối và kiểm tra Wi-Fi trên từng hệ điều hành}
+  \label{tab:hedieuhanh}
+  \begin{tabularx}{\linewidth}{@{}P{2.0cm} L L L@{}}
+    \toprule
+    \textbf{Hệ điều hành} & \textbf{Kiểm tra card} & \textbf{Kết nối} &
+    \textbf{Xem IP, MAC, gateway}\\
+    \midrule
+    Windows 10/11 & \mono{netsh wlan show drivers} (chuẩn, băng tần hỗ trợ) &
+    Biểu tượng Wi-Fi trên thanh tác vụ, chọn SSID, nhập mật khẩu &
+    \mono{ipconfig /all}; \mono{netsh wlan show interfaces} (SSID, BSSID, kênh,
+    kiểu bảo mật)\\
+    Linux (Mint, Ubuntu) & \mono{ip link}, \mono{iw dev}, \mono{iw list} &
+    Applet mạng hoặc \mono{nmcli device wifi connect <SSID> password <...>} &
+    \mono{ip addr}, \mono{ip route}, \mono{iw dev <card> link}\\
+    Android & Cài đặt $\rightarrow$ Wi-Fi &
+    Chọn SSID; mục \emph{Quyền riêng tư} chọn \emph{Dùng MAC của thiết bị} &
+    Chạm vào mạng đang kết nối: IP, gateway, tần số, tốc độ liên kết\\
+    iOS & Cài đặt $\rightarrow$ Wi-Fi &
+    Chọn SSID; trong nút (i) tắt \emph{Địa chỉ Wi-Fi riêng tư} &
+    Nút (i): địa chỉ IP, mặt nạ mạng, bộ định tuyến\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Địa chỉ MAC ngẫu nhiên}
+\label{subsec:macngaunhien}
+Android 10 trở lên và iOS 14 trở lên mặc định dùng một địa chỉ
+MAC ngẫu nhiên, khác nhau cho mỗi mạng Wi-Fi; Windows 10/11 có tùy chọn tương tự
+(\emph{Random hardware addresses}, mặc định tắt). Khi đó địa chỉ router nhìn thấy
+không phải MAC thật của máy, nên các chức năng dựa trên MAC (lọc MAC, cấp IP cố
+định, chặn theo giờ) sẽ áp dụng sai thiết bị hoặc mất tác dụng khi địa chỉ đổi.
+Có thể nhận ra MAC ngẫu nhiên nhờ chữ số thứ hai của địa chỉ là 2, 6, A hoặc E
+(bit gán cục bộ bằng 1). Vì vậy, với mạng của nhóm, các thiết bị phải tắt tính
+năng này trước khi thử các chức năng quản lý.
+
+\subsection{Lỗi thường gặp và cách khắc phục}
+\label{subsec:loi}
+Bảng~\ref{tab:loi} tổng hợp các lỗi thường gặp khi kết nối WLAN, trong đó các
+dòng đánh dấu $\star$ là tình huống nhóm gặp trực tiếp khi thực hiện đồ án.
+
+\begin{longtable}{@{}P{3.3cm} P{5.4cm} P{6.0cm}@{}}
+  \caption{Lỗi thường gặp khi kết nối WLAN}\label{tab:loi}\\
+  \toprule
+  \textbf{Hiện tượng} & \textbf{Nguyên nhân} & \textbf{Cách khắc phục}\\
+  \midrule\endfirsthead
+  \toprule
+  \textbf{Hiện tượng} & \textbf{Nguyên nhân} & \textbf{Cách khắc phục}\\
+  \midrule\endhead
+  \bottomrule\endfoot
+  Không thấy SSID trong danh sách & Card không hỗ trợ băng tần của AP; SSID bị
+  ẩn; bộ phát đang tắt & Kiểm tra băng tần card hỗ trợ; nhập SSID thủ công;
+  bật bộ phát trên router\\
+  $\star$ SSID không phát dù đã bật & Chọn nhầm kiểu mã hóa \emph{WPA2-EAP
+  (802.1X)} khi không có máy chủ RADIUS & Chọn lại \emph{WPA2-PSK} hoặc
+  \emph{WPA3-SAE}, áp dụng lại cấu hình\\
+  Báo sai mật khẩu & Gõ sai, phân biệt hoa thường; thiết bị cũ không hỗ trợ WPA3
+  & Nhập lại; dùng chế độ hỗn hợp WPA2/WPA3 cho thiết bị cũ\\
+  Kết nối được nhưng IP dạng 169.254.x.x & Không nhận được DHCP (DHCP tắt, hết dải
+  địa chỉ) & Bật hoặc mở rộng dải DHCP; ngắt và kết nối lại\\
+  Bị từ chối dù đúng mật khẩu & MAC của thiết bị nằm trong danh sách lọc & Gỡ
+  MAC khỏi danh sách hoặc tắt lọc MAC\\
+  $\star$ Luật theo MAC không có tác dụng & Thiết bị dùng MAC ngẫu nhiên & Tắt
+  MAC ngẫu nhiên cho mạng đó; cập nhật lại MAC trong luật\\
+  $\star$ Có Wi-Fi nhưng không vào được web & Cổng WAN chưa nối hoặc chưa có địa
+  chỉ; DNS lỗi & Kiểm tra trạng thái WAN trên router; ping IP để tách lỗi DNS\\
+  Ping tới laptop Windows thất bại & Tường lửa Windows chặn ICMP đến & Thêm luật
+  cho phép ICMPv4 Echo Request hoặc kiểm tra bằng chiều ngược lại\\
+  $\star$ Ping tới thiết bị báo \emph{Destination Host Unreachable} & Thiết bị
+  đã ngắt hoặc card Wi-Fi đang ngủ, không trả lời ARP; bản ghi DHCP vẫn còn &
+  Mở màn hình thiết bị; đối chiếu danh sách \emph{Associated Stations}\\
+  $\star$ Mất kết nối và cấu hình tự quay lại sau khi Apply & LuCI tự hoàn tác
+  sau 90 giây khi máy quản trị mất kết nối (đổi SSID, đổi IP) & Dùng
+  \emph{Apply unchecked} hoặc quản trị qua cáp LAN\\
+  Không vào được trang quản trị & Sai địa chỉ gateway; đang ở mạng khách bị
+  chặn truy cập router & Xem gateway bằng \mono{ipconfig}/\mono{ip route};
+  chuyển sang mạng chính\\
+  Router không ra Internet khi đặt sau router khác & Hai router dùng trùng dải
+  địa chỉ LAN & Đổi dải LAN của một trong hai router (ví dụ 192.168.10.0/24)\\
+\end{longtable}
+
+% =====================================================================
+\section{Thực nghiệm mô hình Infrastructure}
+\label{sec:infra}
+
+\subsection{Mô hình và thông số mạng}
+Mạng của nhóm là một BSS kép: router N09-Router phát hai SSID trên hai bộ phát
+độc lập, các trạm liên kết trực tiếp vào router (Hình~\ref{fig:sodo-infra}).
+Cổng WAN được nối vào mạng gia đình (router mesh) trong hai giai đoạn: khi
+thiết lập ban đầu để kiểm tra Internet, và khi thử các chức năng cần Internet
+(chặn tên miền, giới hạn giờ, chuyển tiếp cổng, traceroute). Ở phần kết nối
+thiết bị, cổng WAN được rút ra nên các phép thử tập trung vào liên lạc trong
+mạng nội bộ.
+
+\hinh[\linewidth]{N09_sodo1.pdf}{Sơ đồ mạng Infrastructure thực tế của nhóm}{fig:sodo-infra}
+
+\begin{table}[H]
+  \centering\small
+  \caption{Thông số cấu hình thực tế của N09-Router}
+  \label{tab:thongso}
+  \begin{tabularx}{\linewidth}{@{}P{3.6cm} L@{}}
+    \toprule
+    \textbf{Hạng mục} & \textbf{Giá trị}\\
+    \midrule
+    Thiết bị & TP-Link Archer C20 v5, OpenWrt; hostname \mono{N09-Router},
+    múi giờ Asia/Ho\_Chi\_Minh\\
+    Mạng LAN (\mono{br-lan}) & \mono{192.168.1.1/24}, MAC \mono{B0:95:75:9F:1C:A3}\\
+    DHCP & Dải \mono{192.168.1.100}--\mono{.249}, thời hạn thuê 12 giờ (mặc định
+    OpenWrt); IP cố định \mono{192.168.1.50} cho máy bàn\\
+    WAN (\mono{eth0.2}) & DHCP client, MAC \mono{B0:95:75:9F:1C:A4}\\
+    Bộ phát 2,4 GHz (radio0) & MediaTek MT7628, 802.11b/g/n, kênh 6, rộng
+    20~MHz, mã quốc gia VN, 22~dBm; SSID \mono{25CLC04-N09}, BSSID
+    \mono{B0:95:75:9F:1C:A3}\\
+    Bộ phát 5 GHz (radio1) & MediaTek MT7610E, 802.11ac, kênh 36 (5,180~GHz),
+    rộng 80~MHz, mã quốc gia VN, 19~dBm; SSID \mono{25CLC04-N09-5G}, BSSID
+    \mono{B0:95:75:9F:1C:A2}\\
+    Bảo mật & WPA2-PSK, mã hóa CCMP (AES)\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Cấu hình router}
+\label{subsec:cauhinh}
+Router được đưa về cấu hình mặc định của OpenWrt trước buổi quay, sau đó cấu
+hình từ đầu trên máy bàn nối cáp vào cổng LAN. Nhóm dùng cáp cho máy quản trị
+vì khi đổi SSID hoặc kênh, các máy dùng Wi-Fi sẽ bị ngắt.
+
+\begin{enumerate}
+  \item \textbf{Đăng nhập và đặt mật khẩu quản trị.} Truy cập
+    \mono{http://192.168.1.1}, đăng nhập tài khoản \mono{root} chưa có mật
+    khẩu. LuCI hiện cảnh báo chưa đặt mật khẩu; nhóm đặt mật khẩu ngay tại
+    \emph{System $\rightarrow$ Administration}. Trang \emph{Network
+    $\rightarrow$ Wireless} lúc này cho thấy cả hai bộ phát đều tắt, đây là
+    mặc định của OpenWrt để không phát ra mạng không mật khẩu.
+  \item \textbf{Đặt tên thiết bị và múi giờ.} Tại \emph{System $\rightarrow$
+    System}: hostname \mono{N09-Router}, múi giờ Asia/Ho\_Chi\_Minh, đồng bộ
+    giờ với trình duyệt. Đồng hồ đúng là điều kiện để luật chặn theo giờ
+    (Mục~\ref{subsec:nangcao}) hoạt động.
+  \item \textbf{Mạng LAN và DHCP.} Nhóm giữ địa chỉ LAN mặc định
+    \mono{192.168.1.1/24} và máy chủ DHCP mặc định (Hình~\ref{fig:interfaces}).
+  \item \textbf{Kết nối WAN.} Cắm cáp từ mạng gia đình vào cổng WAN; giao diện
+    \mono{wan} ở chế độ DHCP client tự nhận địa chỉ. Kiểm tra bằng
+    \emph{Network $\rightarrow$ Diagnostics} (ping ra Internet).
+  \item \textbf{Bộ phát 2,4 GHz.} Mã quốc gia VN; Mode N; kênh 6; rộng 20~MHz.
+    Trong quy hoạch 20~MHz thường dùng, kênh 6 thuộc nhóm 1, 6, 11 được bố trí
+    để giảm chồng lấn; lựa chọn này phù hợp với băng tần đông đúc. ESSID
+    \mono{25CLC04-N09} theo quy tắc đặt tên của đề,
+    Mode \emph{Access Point}, gắn vào mạng \mono{lan}.
+  \item \textbf{Bộ phát 5 GHz.} Mode AC; kênh 36; rộng 80~MHz để đạt tốc độ
+    cao; ESSID \mono{25CLC04-N09-5G}.
+  \item \textbf{Bảo mật.} Tab \emph{Wireless Security}: WPA2-PSK, cipher
+    \emph{Force CCMP (AES)}, mật khẩu dài. Bấm \emph{Save \& Apply}.
+\end{enumerate}
+
+\hinh{N09_luci_interfaces.png}{Giao diện LAN (192.168.1.1/24) và WAN (DHCP client) trên N09-Router}{fig:interfaces}
+\hinh{N09_luci_wifi_24ghz.png}{Cấu hình bộ phát 2,4 GHz: mã quốc gia VN, Mode N, kênh 6, rộng 20 MHz, SSID 25CLC04-N09}{fig:wifi24}
+\hinh{N09_luci_wifi_5ghz.png}{Cấu hình bộ phát 5 GHz: Mode AC, kênh 36, rộng 80 MHz, SSID 25CLC04-N09-5G}{fig:wifi5}
+
+\subsection{Kết nối thiết bị}
+\label{subsec:ketnoithietbi}
+\begin{itemize}
+  \item \textbf{Desktop (Linux Mint).} Rút cáp LAN để máy chỉ còn card Wi-Fi,
+    chọn \mono{25CLC04-N09} trên applet mạng. Kiểm tra bằng
+    \mono{nmcli device wifi} (thấy hai SSID của nhóm ở kênh 6 và 36) và
+    \mono{ping -c 4 192.168.1.1}.
+  \item \textbf{Laptop Windows.} Tắt \emph{Random hardware addresses}, kết nối
+    vào mạng nhóm. Trang thuộc tính Wi-Fi hiển thị SSID, giao thức, kiểu bảo
+    mật WPA2-Personal, băng tần, địa chỉ IPv4 và MAC; ping tới router thành
+    công.
+  \item \textbf{Điện thoại Android.} Kết nối mạng \mono{25CLC04-N09-5G}, chọn
+    \emph{Dùng MAC của thiết bị}; trang chi tiết hiển thị địa chỉ IP, gateway
+    \mono{192.168.1.1} và tần số 5~GHz.
+\end{itemize}
+
+Sau đó trạng thái toàn mạng được kiểm tra trên router
+(Hình~\ref{fig:status}, Bảng~\ref{tab:leases}) và bằng ping chéo từ máy bàn
+(Hình~\ref{fig:ping}, Bảng~\ref{tab:ping}).
+
+\hinh{N09_luci_status_overview.png}{Trang Status của N09-Router: danh sách DHCPv4/DHCPv6 và trạng thái hai bộ phát}{fig:status}
+
+\begin{table}[H]
+  \centering\small
+  \caption{Các thiết bị nhận địa chỉ từ N09-Router (Active DHCPv4 Leases)}
+  \label{tab:leases}
+  \begin{tabularx}{\linewidth}{@{}l l l L@{}}
+    \toprule
+    \textbf{Hostname} & \textbf{IPv4} & \textbf{MAC} & \textbf{Thiết bị}\\
+    \midrule
+    \mono{luckmintpc}    & 192.168.1.216 & 9C:B1:50:1F:C9:CB & Desktop Linux Mint\\
+    \mono{nguyenqk-pc}   & 192.168.1.145 & C8:8A:9A:B9:1C:8E & Laptop Arch Linux (Khánh)\\
+    \mono{ItzITmeehh}    & 192.168.1.199 & 24:EB:16:B6:AC:B0 & Laptop Windows (Vũ)\\
+    \mono{Redmi-Note-14} & 192.168.1.115 & 42:79:95:D5:EC:D2 & Redmi Note 14 (Tuấn)\\
+    (không tên)          & 192.168.1.228 & 30:56:0F:04:A9:54 & Nhiều khả năng là iPhone 11 (Khánh), kết nối không hoàn tất, không dùng trong video\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Điện thoại Android của Vũ không có trong ảnh chụp danh sách này; minh chứng
+kết nối của thiết bị này nằm ở cảnh 11 của video.
+
+\hinh{N09_ping_crosscheck.png}{Ping chéo từ máy bàn tới các thiết bị trong mạng}{fig:ping}
+
+\begin{table}[H]
+  \centering\small
+  \caption{Kết quả ping chéo từ máy bàn (192.168.1.216)}
+  \label{tab:ping}
+  \begin{tabularx}{\linewidth}{@{}l l c L@{}}
+    \toprule
+    \textbf{Đích} & \textbf{Hostname} & \textbf{Gói nhận} & \textbf{RTT min / avg / max (ms)}\\
+    \midrule
+    192.168.1.115 & \mono{Redmi-Note-14} & 4/4 & 7,8 / 21,1 / 54,9\\
+    192.168.1.145 & \mono{nguyenqk-pc}   & 4/4 & 5,9 / 128,2 / 402,8\\
+    192.168.1.199 & \mono{ItzITmeehh}    & 0/4 & \emph{Destination Host Unreachable}\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Các chức năng quản lý của router}
+\label{subsec:nangcao}
+Mỗi chức năng được thử theo cùng một quy trình: cấu hình, áp dụng, kiểm tra
+trên thiết bị thử (điện thoại Android hoặc laptop), rồi trả về trạng thái ban
+đầu. Bảng~\ref{tab:nangcao} ghi lại kết quả quan sát.
+
+\begin{longtable}{@{}P{2.8cm} P{4.2cm} P{7.7cm}@{}}
+  \caption{Các chức năng quản lý đã cấu hình và kết quả kiểm tra}\label{tab:nangcao}\\
+  \toprule
+  \textbf{Chức năng} & \textbf{Vị trí cấu hình} & \textbf{Kết quả kiểm tra}\\
+  \midrule\endfirsthead
+  \toprule
+  \textbf{Chức năng} & \textbf{Vị trí cấu hình} & \textbf{Kết quả kiểm tra}\\
+  \midrule\endhead
+  \bottomrule\endfoot
+  Ẩn SSID & Wireless $\rightarrow$ Edit $\rightarrow$ Hide ESSID & Mạng
+  2,4~GHz biến mất khỏi danh sách quét của điện thoại thử; bỏ ẩn thì hiện
+  lại\\
+  Lọc địa chỉ MAC & Wireless $\rightarrow$ MAC-Filter (Allow all except listed)
+  & Thiết bị có MAC trong danh sách bị ngắt và không vào lại được dù đúng mật
+  khẩu; tắt lọc thì vào lại bình thường\\
+  IP cố định theo MAC & DHCP and DNS $\rightarrow$ Static Leases & Máy bàn tắt
+  rồi bật Wi-Fi, nhận đúng \mono{192.168.1.50} (Hình~\ref{fig:static})\\
+  Chặn tên miền & DHCP and DNS $\rightarrow$ DNS Records & Trỏ
+  \mono{vnexpress.net} và \mono{www.vnexpress.net} về \mono{0.0.0.0}:
+  laptop Windows không mở được trang, các trang khác vẫn truy cập bình thường; xóa bản ghi thì trở lại bình thường\\
+  Giới hạn giờ truy cập & Firewall $\rightarrow$ Traffic Rules (MAC nguồn,
+  lan $\rightarrow$ wan, reject, Time Restrictions) & Thiết bị thử vẫn
+  kết nối Wi-Fi nhưng không truy cập được web; tắt luật thì truy cập lại
+  được\\
+  Chuyển tiếp cổng & Firewall $\rightarrow$ Port Forwards (TCP 8080
+  $\rightarrow$ 192.168.1.50:8080) & Laptop Arch Linux đặt ở mạng gia đình
+  (phía WAN) truy cập được web server chạy trên máy bàn qua địa chỉ WAN của
+  router; luật được xóa sau khi thử\\
+  NAT & Firewall $\rightarrow$ Zones (wan: Masquerading) & Vùng \mono{wan} bật
+  Masquerading, tức NAT cho toàn bộ mạng LAN\\
+  Chẩn đoán & Network $\rightarrow$ Diagnostics & Traceroute tới 8.8.8.8
+  đi qua router gia đình trước khi ra mạng nhà cung cấp, tức có hai lớp NAT\\
+  Sao lưu cấu hình & System $\rightarrow$ Backup / Flash Firmware & Tạo được
+  tệp sao lưu để phục hồi khi cần\\
+\end{longtable}
+
+\hinh[0.85\linewidth]{N09_luci_static_lease.png}{Gán IP cố định 192.168.1.50 theo MAC cho máy bàn (Static Lease)}{fig:static}
+
+\subsection{Tổng hợp các chức năng router hỗ trợ}
+Đề yêu cầu cấu hình tất cả chức năng router hỗ trợ.
+Bảng~\ref{tab:tonghop} liệt kê đầy đủ các chức năng của bản OpenWrt này, kèm
+trạng thái thực hiện và lý do với các chức năng không thực hiện.
+
+\begin{table}[H]
+  \centering\small
+  \caption{Tổng hợp chức năng router và trạng thái thực hiện}
+  \label{tab:tonghop}
+  \begin{tabularx}{\linewidth}{@{}L c c L@{}}
+    \toprule
+    \textbf{Chức năng} & \textbf{Hỗ trợ} & \textbf{Thực hiện} & \textbf{Ghi chú}\\
+    \midrule
+    SSID, bảo mật WPA2 trên hai băng tần & Có & Có & Mục~\ref{subsec:cauhinh}\\
+    Kênh, độ rộng kênh, chuẩn, mã quốc gia & Có & Có & Mục~\ref{subsec:cauhinh}\\
+    Mật khẩu quản trị, hostname, múi giờ & Có & Có & Mục~\ref{subsec:cauhinh}\\
+    LAN, DHCP, WAN (DHCP client) & Có & Có & Giữ dải LAN mặc định\\
+    Ẩn SSID, lọc MAC, IP cố định & Có & Có & Bảng~\ref{tab:nangcao}\\
+    Chặn tên miền, giới hạn giờ & Có & Có & Qua DNS và luật tường lửa\\
+    Chuyển tiếp cổng, NAT, chẩn đoán, sao lưu & Có & Có & Bảng~\ref{tab:nangcao}\\
+    Mạng khách tách riêng & Có & Không & Không đưa vào video\\
+    Định tuyến tĩnh & Có & Không & Mạng chỉ có một mạng con\\
+    DMZ & Không có mục riêng & -- & Tương đương chuyển tiếp mọi cổng; rủi ro cao\\
+    WPS, UPnP, tên miền động (DDNS) & Không & -- & Không cài trên bản firmware
+    do bộ nhớ flash chỉ 8~MB\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% =====================================================================
+\section{Thực nghiệm mô hình Ad-hoc}
+\label{sec:adhoc}
+
+\subsection{Lý do dùng máy ảo}
+Các thiết bị Windows 11, Android và iOS của nhóm đều không cho người dùng tạo
+mạng IBSS. Trên Windows, lệnh \mono{netsh wlan show drivers} chỉ cho biết khả
+năng \emph{Hosted network}, vốn là chế độ phát Wi-Fi kiểu AP mềm (SoftAP) chứ
+không phải Ad-hoc, nên không dùng được để kết luận về IBSS. Theo hướng dẫn
+của đề, nhóm thực hiện trên máy ảo Ubuntu~22.04 (VMware). Máy ảo không có card
+Wi-Fi thật nên nhóm dùng module nhân Linux \mono{mac80211\_hwsim} để giả lập
+card Wi-Fi, mỗi card giả lập có MAC, kênh và công suất phát riêng.
+
+\subsection{Các bước thực hiện}
+\begin{enumerate}
+  \item \textbf{Tạo hai card Wi-Fi ảo} và kiểm tra (Hình~\ref{fig:hwsim}):
+\begin{lstlisting}
+sudo modprobe mac80211_hwsim radios=2
+iw dev        # xuat hien phy#0 (wlan0) va phy#1 (wlan1)
+\end{lstlisting}
+  \item \textbf{Tách hai card vào hai network namespace} để mỗi card là một
+    ``máy'' độc lập. Nếu để chung, Linux nhận ra cả hai địa chỉ IP là của
+    chính nó và chuyển gói qua loopback thay vì qua sóng ảo
+    (Hình~\ref{fig:netns}):
+\begin{lstlisting}
+sudo ip netns add ns1
+sudo ip netns add ns2
+sudo iw phy phy0 set netns name ns1
+sudo iw phy phy1 set netns name ns2
+\end{lstlisting}
+  \item \textbf{Chuyển sang chế độ IBSS và gia nhập mạng} \mono{N09-AdHoc} ở
+    tần số 2437~MHz (kênh 6). Giao diện phải được tắt trước khi đổi chế độ.
+    Không có DHCP nên địa chỉ IP được gán tĩnh (Hình~\ref{fig:ibsscmd}):
+\begin{lstlisting}
+# Node 1 (ns1); Node 2 lam tuong tu voi ns2, wlan1, 10.0.0.2/24
+sudo ip netns exec ns1 ip link set wlan0 down
+sudo ip netns exec ns1 iw dev wlan0 set type ibss
+sudo ip netns exec ns1 ip link set wlan0 up
+sudo ip netns exec ns1 iw dev wlan0 ibss join N09-AdHoc 2437
+sudo ip netns exec ns1 ip addr add 10.0.0.1/24 dev wlan0
+\end{lstlisting}
+  \item \textbf{Kiểm tra ở tầng 802.11} bằng \mono{iw dev <card> info} và
+    \mono{iw dev wlan0 station dump}; \textbf{kiểm tra ở tầng IP} bằng ping hai
+    chiều giữa 10.0.0.1 và 10.0.0.2.
+\end{enumerate}
+
+\hinh[\linewidth]{N09_sodo2.pdf}{Sơ đồ mạng Ad-hoc (IBSS) hai nút trên máy ảo Ubuntu}{fig:sodo-adhoc}
+\hinh[0.8\linewidth]{Picture2.png}{Hai card Wi-Fi ảo phy\#0 và phy\#1 sau khi nạp mac80211\_hwsim}{fig:hwsim}
+\hinh[0.8\linewidth]{Picture3.png}{Mỗi card nằm trong một network namespace riêng}{fig:netns}
+\hinh[0.85\linewidth]{Picture4.png}{Chuỗi lệnh chuyển hai nút sang chế độ IBSS (lần chạy thử với SSID demoAdhoc)}{fig:ibsscmd}
+
+\subsection{Kết quả}
+\hinh{N09_adhoc_iw_info.png}{Hai giao diện ở chế độ IBSS, SSID N09-AdHoc, kênh 6 (2437 MHz)}{fig:ibssinfo}
+\hinh[0.75\linewidth]{N09_adhoc_station_dump.png}{Node 1 thấy Node 2 (02:00:00:00:01:00) ở trạng thái authorized, authenticated, associated}{fig:station}
+\hinh[0.85\linewidth]{Picture6.png}{Ping từ Node 1 (10.0.0.1) tới Node 2 (10.0.0.2): 4/4 gói, mất 0\,\%}{fig:adhocping}
+
+\begin{table}[H]
+  \centering\small
+  \caption{Kết quả kiểm tra mạng Ad-hoc hai nút}
+  \label{tab:adhoc}
+  \begin{tabularx}{\linewidth}{@{}P{3.4cm} P{3.8cm} L@{}}
+    \toprule
+    \textbf{Nội dung} & \textbf{Lệnh} & \textbf{Kết quả}\\
+    \midrule
+    Chế độ hoạt động & \mono{iw dev wlan0/wlan1 info} & \mono{type IBSS}, SSID
+    \mono{N09-AdHoc}, kênh 6, rộng 20~MHz (no HT)\\
+    Phát hiện nút lân cận & \mono{iw dev wlan0 station dump} & Thấy
+    \mono{02:00:00:00:01:00}; authorized, authenticated, associated: yes;
+    tín hiệu $-30$~dBm; chu kỳ beacon 100~TU\\
+    Liên lạc tầng IP & \mono{ping -c 4} hai chiều & 4/4 gói mỗi chiều, mất 0\,\%,
+    RTT khoảng 0,05--0,27~ms\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Station dump xác nhận hai nút liên kết trực tiếp với nhau ở tầng 802.11 mà
+không qua AP nào; ping thành công xác nhận liên lạc ở tầng IP. Độ trễ rất thấp
+vì \mono{mac80211\_hwsim} truyền khung bằng phần mềm trong cùng nhân hệ điều
+hành; kết quả chứng minh đúng nguyên lý IBSS nhưng không phản ánh suy hao,
+khoảng cách hay nhiễu của Wi-Fi thật.
+
+% =====================================================================
+\section{Kết quả và thảo luận}
+\label{sec:ketqua}
+
+\subsection{Đối chiếu với yêu cầu đề}
+\begin{table}[H]
+  \centering\small
+  \caption{Đối chiếu yêu cầu đề bài với nội dung báo cáo và video}
+  \label{tab:doichieu}
+  \begin{tabularx}{\linewidth}{@{}L P{6.2cm}@{}}
+    \toprule
+    \textbf{Yêu cầu} & \textbf{Minh chứng}\\
+    \midrule
+    Khái niệm WLAN & Mục~\ref{sec:khainiem}\\
+    Thành phần WLAN & Mục~\ref{sec:thanhphan}\\
+    Mô hình Infrastructure, Ad-hoc và giải pháp kết nối & Mục~\ref{sec:mohinh},
+    \ref{sec:baomat}, \ref{sec:giaiphap}\\
+    SSID theo tên nhóm (xxCLCxx-Nxx) & \mono{25CLC04-N09},
+    \mono{25CLC04-N09-5G} (Bảng~\ref{tab:thongso})\\
+    Cấu hình các chức năng router & Mục~\ref{subsec:cauhinh}, \ref{subsec:nangcao};
+    Bảng~\ref{tab:tonghop}\\
+    Kết nối Laptop, Desktop, Smartphone có minh chứng & Mục~\ref{subsec:ketnoithietbi};
+    Bảng~\ref{tab:leases}, \ref{tab:ping}\\
+    Ad-hoc trên máy ảo khi thiết bị không hỗ trợ & Mục~\ref{sec:adhoc}\\
+    Video có thuyết minh và thấy người thực hiện & Phụ lục~\ref{app:video}\\
+    Ảnh chụp minh chứng phần cấu hình & Mục~\ref{sec:infra}, \ref{sec:adhoc}\\
+    Tỷ lệ đóng góp có chữ ký & Bảng B, phần đầu báo cáo\\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Nhận xét}
+\label{subsec:nhanxet}
+\begin{enumerate}
+  \item \textbf{Mô hình Infrastructure hoạt động đúng lý thuyết.} Router cấp
+    địa chỉ DHCP cho các thiết bị trong cùng mạng con 192.168.1.0/24, hai bộ
+    phát có hai BSSID khác nhau đúng như khái niệm BSS, và các thiết bị liên
+    lạc được với nhau thông qua router.
+  \item \textbf{Mọi trạm đều liên kết vào băng 5 GHz.} Trạng thái cuối buổi
+    (Hình~\ref{fig:status}, \ref{fig:overview}) cho thấy bộ phát 5~GHz có 3
+    trạm liên kết, còn SSID 2,4~GHz ở trạng thái \emph{disabled} với kiểu mã
+    hóa \emph{WPA2 802.1X}. Nhiều khả năng nguyên nhân là kiểu xác thực của SSID 2,4~GHz bị
+    đặt thành chế độ Enterprise trong khi mạng không có máy chủ RADIUS, khiến
+    hostapd không khởi tạo được giao diện (chưa đối chiếu nhật ký hệ thống). Đây là bài học thực tế: SSID gia
+    đình phải dùng chế độ Personal (PSK/SAE).
+  \item \textbf{Bản ghi DHCP không chứng minh thiết bị đang trực tuyến.}
+    Laptop Windows \mono{ItzITmeehh} vẫn còn trong danh sách thuê nhưng ping trả
+    về \emph{Destination Host Unreachable}. Thông báo này nghĩa là máy bàn không
+    nhận được phản hồi ARP, tức laptop đã rời mạng hoặc card Wi-Fi đang ngủ ở
+    thời điểm đo; nếu chỉ do tường lửa Windows chặn ICMP thì kết quả sẽ là hết
+    thời gian chờ (\emph{timeout}). Muốn kết luận phải đối chiếu danh sách trạm
+    đang liên kết.
+  \item \textbf{Địa chỉ MAC ngẫu nhiên.} MAC \mono{42:79:95:D5:EC:D2} của
+    Redmi Note 14 của Tuấn có chữ số thứ hai là 2, tức đang dùng MAC ngẫu nhiên. Ví dụ
+    này cho thấy vì sao phải tắt tính năng đó trước khi thử lọc MAC và chặn
+    theo giờ.
+  \item \textbf{Độ trễ Wi-Fi dao động mạnh.} RTT trung bình tới laptop là
+    128~ms, có gói lên tới 403~ms, trong khi mạng có dây thường dưới 1~ms.
+    Nhiều khả năng do cơ chế tiết kiệm năng lượng của card không dây và việc
+    tranh chấp kênh theo CSMA/CA.
+  \item \textbf{Mô hình Ad-hoc} chứng minh được liên kết trực tiếp giữa hai
+    nút không qua AP, nhưng chỉ trên card giả lập, phù hợp với việc Ad-hoc
+    hầu như không còn được hỗ trợ trên hệ điều hành phổ thông.
+\end{enumerate}
+
+\hinh[0.85\linewidth]{N09_luci_wireless_overview.png}{Wireless Overview cuối buổi: SSID 5 GHz hoạt động (WPA2-PSK), SSID 2,4 GHz bị vô hiệu do đặt nhầm WPA2-802.1X}{fig:overview}
+
+\subsection{Hạn chế và hướng phát triển}
+Video chưa trình diễn kết nối iPhone (lần kết nối thử không hoàn tất) và
+mạng khách tách riêng; ở phần kết nối thiết bị, các máy chỉ được kiểm tra liên
+lạc trong mạng nội bộ vì cổng WAN đã được rút ra. Nếu có thêm thời gian, nhóm sẽ: bổ sung thử nghiệm
+iPhone và mạng khách; đo thông lượng bằng \mono{iperf3} trên hai băng tần;
+thử chuyển vùng giữa hai AP cùng SSID (ESS); và lặp lại thử nghiệm Ad-hoc trên
+hai máy Linux có card Wi-Fi thật hỗ trợ IBSS.
+
+% =====================================================================
+\section{Kết luận}
+\label{sec:ketluan}
+Đồ án đã hệ thống hóa khái niệm, thành phần, chuẩn kỹ thuật, bảo mật và hai mô
+hình triển khai của WLAN, kèm giải pháp kết nối cho từng loại thiết bị và các
+lỗi thường gặp. Về thực hành, nhóm cấu hình router TP-Link Archer C20 chạy
+OpenWrt từ trạng thái mặc định thành mạng WLAN hai băng tần mang SSID
+\mono{25CLC04-N09}, kết nối Desktop, Laptop và Smartphone, và thử các chức năng
+quản lý như ẩn SSID, lọc MAC, IP cố định, chặn tên miền, giới hạn giờ và
+chuyển tiếp cổng. Mô hình Ad-hoc được kiểm chứng trên máy ảo Linux với hai nút
+IBSS liên lạc trực tiếp với nhau.
+
+Kết quả cho thấy Infrastructure là mô hình phù hợp cho mạng gia đình nhờ có
+Internet, cấp địa chỉ tự động, quản lý tập trung và bảo mật hiện đại; Ad-hoc
+chỉ còn vai trò trong các mạng chuyên dụng không có hạ tầng. Các sự cố gặp
+trong quá trình làm, như chọn nhầm chế độ bảo mật Enterprise hay địa chỉ MAC
+ngẫu nhiên, đã được phân tích và đưa vào bảng lỗi thường gặp.
+
+% =====================================================================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Tài liệu tham khảo}
+\begin{thebibliography}{99}\small
+  \bibitem{ieee80211} IEEE, \emph{IEEE Std 802.11-2020: Wireless LAN Medium
+  Access Control (MAC) and Physical Layer (PHY) Specifications}, 2021.
+  \bibitem{gast2005} M.~S. Gast, \emph{802.11 Wireless Networks: The Definitive
+  Guide}, 2nd ed. O'Reilly Media, 2005.
+  \bibitem{kurose2012} J.~F. Kurose and K.~W. Ross, \emph{Computer Networking:
+  A Top-Down Approach}, 6th ed. Pearson, 2012.
+  \bibitem{perahia2013} E.~Perahia and R.~Stacey, \emph{Next Generation Wireless
+  LANs: 802.11n and 802.11ac}, 2nd ed. Cambridge University Press, 2013.
+  \bibitem{coleman2021} D.~D. Coleman and D.~A. Westcott, \emph{CWNA Certified
+  Wireless Network Administrator Study Guide}. Sybex, 2021.
+  \bibitem{wpa3spec} Wi-Fi Alliance, \emph{WPA3 Specification}, 2018.
+  \bibitem{krack2017} M.~Vanhoef and F.~Piessens, ``Key Reinstallation Attacks:
+  Forcing Nonce Reuse in WPA2,'' in \emph{Proc. ACM CCS}, 2017.
+  \bibitem{fms2001} S.~Fluhrer, I.~Mantin and A.~Shamir, ``Weaknesses in the Key
+  Scheduling Algorithm of RC4,'' in \emph{Selected Areas in Cryptography},
+  LNCS 2259, 2001.
+  \bibitem{tt012025} Bộ Khoa học và Công nghệ, \emph{Thông tư 01/2025/TT-BKHCN
+    sửa đổi, bổ sung Thông tư 08/2021/TT-BTTTT quy định danh mục thiết bị vô
+  tuyến điện được miễn giấy phép}, 2025.
+  \bibitem{openwrt} OpenWrt Project, \emph{OpenWrt User Guide: Wireless
+  configuration, Firewall, DHCP and DNS}.
+  \url{https://openwrt.org/docs/guide-user/start}
+  \bibitem{hwsim} The Linux Kernel Documentation, \emph{mac80211\_hwsim}.
+  \url{https://docs.kernel.org/networking/mac80211_hwsim/mac80211_hwsim.html}
+  \bibitem{mswifi} Microsoft, \emph{Netsh commands for Wireless Local Area
+  Network (WLAN)}. \url{https://learn.microsoft.com/windows-server/networking/technologies/netsh/netsh-wlan}
+  \bibitem{android} Google, \emph{Android Help: Connect to Wi-Fi networks on
+  your Android device}. \url{https://support.google.com/android}
+  \bibitem{apple} Apple, \emph{Use private Wi-Fi addresses on Apple devices}.
+  \url{https://support.apple.com/102509}
+\end{thebibliography}
+
+% =====================================================================
+\clearpage
 \appendix
-\input{sections/A_abbreviations}
-\input{sections/B_terminology}
+\renewcommand{\thesection}{\Alph{section}}
+\section{Bản đồ phân cảnh video}
+\label{app:video}
+Video dài 40 phút 13 giây, gồm 22 cảnh; mỗi cảnh là một clip có thuyết minh
+của người trực tiếp thao tác, được dựng theo thứ tự dưới đây. Dựng video:
+Nguyễn Quốc Khánh.
 
-% ---------------- References ----------------
-\bibliographystyle{alpha}
-\bibliography{references}
+\begin{longtable}{@{}P{1.1cm} P{8.2cm} P{5.4cm}@{}}
+  \caption{Bản đồ phân cảnh video thực hành}\label{tab:canh}\\
+  \toprule
+  \textbf{Cảnh} & \textbf{Nội dung} & \textbf{Thực hiện}\\
+  \midrule\endfirsthead
+  \toprule
+  \textbf{Cảnh} & \textbf{Nội dung} & \textbf{Thực hiện}\\
+  \midrule\endhead
+  \bottomrule\endfoot
+  \multicolumn{3}{@{}l}{\textit{Phần 0 -- Mở đầu}}\\
+  01 & Giới thiệu nhóm, mục tiêu và thiết bị & Vũ, Tuấn, Khánh\\
+  \multicolumn{3}{@{}l}{\textit{Phần 1 -- Giới thiệu router}}\\
+  02 & Router TP-Link Archer C20 v5: mặt trước, mặt sau, nhãn, phần cứng, OpenWrt & Tuấn\\
+  03 & Cách nối dây: máy quản trị cắm cổng LAN, cáp mạng nhà vào cổng WAN & Tuấn\\
+  \multicolumn{3}{@{}l}{\textit{Phần 2 -- Cấu hình cơ bản}}\\
+  04 & Đăng nhập LuCI lần đầu, đặt mật khẩu quản trị & Khánh\\
+  05 & Đặt hostname N09-Router và múi giờ & Khánh\\
+  07 & Nối WAN, kiểm tra Internet trên router & Tuấn\\
+  08 & Bật Wi-Fi hai băng tần, đặt SSID, kênh, bảo mật & Tuấn\\
+  \multicolumn{3}{@{}l}{\textit{Phần 3 -- Kết nối thiết bị (Infrastructure)}}\\
+  09 & Desktop Linux Mint kết nối bằng Wi-Fi, \mono{nmcli}, ping & Tuấn\\
+  10 & Laptop Windows: tắt MAC ngẫu nhiên, kết nối, xem thuộc tính, ping & Vũ\\
+  11 & Điện thoại Android kết nối băng 5~GHz & Vũ\\
+  14 & Kiểm tra toàn mạng trên router và ping chéo & Tuấn, Vũ\\
+  \multicolumn{3}{@{}l}{\textit{Phần 4 -- Chức năng quản lý}}\\
+  15 & Ẩn SSID & Tuấn, Vũ\\
+  17 & Lọc địa chỉ MAC & Tuấn, Vũ\\
+  18 & IP cố định theo MAC & Tuấn, Vũ\\
+  19 & Chặn tên miền qua DNS & Tuấn\\
+  20 & Giới hạn giờ truy cập & Tuấn\\
+  21 & Chuyển tiếp cổng (thử từ laptop Arch ở mạng gia đình), NAT, traceroute, sao lưu cấu hình & Tuấn\\
+  \multicolumn{3}{@{}l}{\textit{Phần 5 -- Mô hình Ad-hoc}}\\
+  22 & Lý do dùng máy ảo & Hà Huy Hoàng\\
+  23 & Tạo hai card Wi-Fi ảo, tách namespace & Hà Huy Hoàng\\
+  24 & Chuyển hai nút sang IBSS, gán IP & Hà Huy Hoàng\\
+  25 & Kiểm tra \mono{iw info}, \mono{station dump}, ping hai chiều & Hà Huy Hoàng\\
+  \multicolumn{3}{@{}l}{\textit{Phần 6 -- Kết}}\\
+  26 & Tổng kết & Vũ, Tuấn, Khánh\\
+\end{longtable}
+
+Số hiệu cảnh giữ theo kịch bản gốc; các cảnh 06, 12, 13 và 16 không được đưa
+vào bản dựng cuối.
+
+% =====================================================================
+\clearpage
+\section{Danh mục từ viết tắt}
+\label{app:viettat}
+\begin{longtable}{@{}P{2.2cm} P{6.3cm} P{6.2cm}@{}}
+  \caption{Danh mục từ viết tắt}\label{tab:viettat}\\
+  \toprule
+  \textbf{Viết tắt} & \textbf{Tiếng Anh} & \textbf{Tiếng Việt}\\
+  \midrule\endfirsthead
+  \toprule
+  \textbf{Viết tắt} & \textbf{Tiếng Anh} & \textbf{Tiếng Việt}\\
+  \midrule\endhead
+  \bottomrule\endfoot
+  AES & Advanced Encryption Standard & Chuẩn mã hóa nâng cao\\
+  AP & Access Point & Điểm truy cập\\
+  ARP & Address Resolution Protocol & Giao thức phân giải địa chỉ\\
+  BSS & Basic Service Set & Tập dịch vụ cơ bản\\
+  BSSID & Basic Service Set Identifier & Định danh tập dịch vụ cơ bản\\
+  CCMP & Counter Mode CBC-MAC Protocol & Giao thức mã hóa dùng AES của WPA2\\
+  CSMA/CA & Carrier Sense Multiple Access with Collision Avoidance & Đa truy cập
+  cảm nhận sóng mang, tránh xung đột\\
+  DFS & Dynamic Frequency Selection & Chọn tần số động\\
+  DHCP & Dynamic Host Configuration Protocol & Giao thức cấu hình địa chỉ động\\
+  DNS & Domain Name System & Hệ thống tên miền\\
+  DS & Distribution System & Hệ thống phân phối\\
+  EAP & Extensible Authentication Protocol & Giao thức xác thực mở rộng\\
+  ESS & Extended Service Set & Tập dịch vụ mở rộng\\
+  GCMP & Galois/Counter Mode Protocol & Giao thức mã hóa Galois/Counter\\
+  IBSS & Independent Basic Service Set & Tập dịch vụ cơ bản độc lập (Ad-hoc)\\
+  ICMP & Internet Control Message Protocol & Giao thức bản tin điều khiển Internet\\
+  IoT & Internet of Things & Internet vạn vật\\
+  LLC & Logical Link Control & Điều khiển liên kết logic\\
+  LuCI & Lua Configuration Interface & Giao diện quản trị web của OpenWrt\\
+  MAC & Medium Access Control & Điều khiển truy cập môi trường\\
+  MANET & Mobile Ad-hoc Network & Mạng di động tùy biến\\
+  MIMO & Multiple Input Multiple Output & Đa đầu vào đa đầu ra\\
+  MLO & Multi-Link Operation & Hoạt động đa liên kết\\
+  NAT & Network Address Translation & Biên dịch địa chỉ mạng\\
+  OFDM(A) & Orthogonal Frequency Division Multiplexing (Multiple Access) &
+  Ghép kênh (đa truy cập) phân chia theo tần số trực giao\\
+  OWE & Opportunistic Wireless Encryption & Mã hóa không dây cơ hội\\
+  PHY & Physical Layer & Tầng vật lý\\
+  PMF & Protected Management Frames & Bảo vệ khung quản lý\\
+  PSK & Pre-Shared Key & Khóa chia sẻ trước\\
+  RADIUS & Remote Authentication Dial-In User Service & Dịch vụ xác thực người
+  dùng từ xa\\
+  SAE & Simultaneous Authentication of Equals & Xác thực đồng thời giữa các bên
+  ngang hàng\\
+  SSID & Service Set Identifier & Tên mạng Wi-Fi\\
+  STA & Station & Trạm, thiết bị đầu cuối\\
+  TKIP & Temporal Key Integrity Protocol & Giao thức toàn vẹn khóa tạm thời\\
+  TWT & Target Wake Time & Thời điểm đánh thức mục tiêu\\
+  WEP & Wired Equivalent Privacy & Bảo mật tương đương mạng có dây\\
+  WLAN & Wireless Local Area Network & Mạng cục bộ không dây\\
+  WLC & Wireless LAN Controller & Bộ điều khiển WLAN\\
+  WNIC & Wireless Network Interface Card & Card mạng không dây\\
+  WPA & Wi-Fi Protected Access & Chuẩn bảo mật truy cập Wi-Fi\\
+  WPAN & Wireless Personal Area Network & Mạng cá nhân không dây\\
+  WPS & Wi-Fi Protected Setup & Thiết lập Wi-Fi nhanh\\
+  WWAN & Wireless Wide Area Network & Mạng diện rộng không dây\\
+\end{longtable}
 
 \end{document}

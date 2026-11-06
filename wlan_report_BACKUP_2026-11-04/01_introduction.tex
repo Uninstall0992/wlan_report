@@ -1,0 +1,85 @@
+% =====================================================================
+% 01_introduction.tex
+% =====================================================================
+\begingroup
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}
+
+\section{Tổng quan về mạng cục bộ không dây}
+\label{sec:intro}
+
+\subsection{WLAN là gì?}
+
+\ac{wlan} là mạng dữ liệu kết nối các thiết bị thông qua môi trường vô tuyến
+thay vì cáp, thường được triển khai trong nhà ở, văn phòng, khuôn viên trường
+học hoặc địa điểm công cộng. Hầu hết \acp{wlan} hiện nay đều dựa trên họ tiêu
+chuẩn \ac{ieee} 802.11, quy định các lớp \ac{phy} và \ac{mac}
+  \cite{ieee80211_2020,kurose2012,hcmus_wlan_report}.
+
+\subsection{LAN và WLAN}
+
+\ac{lan} kết nối các thiết bị trong một phạm vi giới hạn, thường sử dụng
+Ethernet chuyển mạch và cáp vật lý. \ac{wlan} cung cấp chức năng mạng cục bộ
+tương tự thông qua môi trường vô tuyến dùng chung, giúp người dùng di chuyển
+linh hoạt và triển khai mạng dễ dàng hơn, nhưng khiến hiệu năng nhạy cảm hơn
+với khoảng cách, nhiễu và vật cản. Thông thường, \ac{wlan} kết nối với phần
+còn lại của \ac{lan} thông qua một điểm truy cập (access point) \cite{kurose2012}.
+
+\subsection{So sánh WLAN với các mạng không dây khác}
+
+Các mạng không dây thường được phân loại theo phạm vi phủ sóng
+(Bảng~\ref{tab:wireless-classes}). \acp{wlan} nằm giữa mạng cá nhân tầm ngắn
+và mạng di động diện rộng.
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Phân loại mạng không dây (các giá trị điển hình).}
+  \label{tab:wireless-classes}
+  \begin{tabularx}{\linewidth}{@{} L{0.8} L{0.9} L{0.9} L{1.2} L{1.2} @{}}
+    \toprule
+    \textbf{Loại mạng} & \textbf{Phạm vi điển hình} & \textbf{Ví dụ} & \textbf{Băng tần} & \textbf{Ứng dụng điển hình} \\
+    \midrule
+    \ac{wpan}      & khoảng 10~m trở xuống   & Bluetooth         & Không cấp phép (2,4~GHz) & Tai nghe, cảm biến, thiết bị đeo \\
+    \acs{wlan}     & vài chục mét trong nhà  & Wi-Fi (802.11)    & Không cấp phép 2,4; 5; 6~GHz & Nhà ở, văn phòng, khuôn viên trường \\
+    Mạng đô thị không dây (Wireless MAN) & vài kilômét & WiMAX (802.16) & Có cấp phép và không cấp phép & Băng rộng cố định, đường trục \\
+    \ac{wwan}      & vài kilômét mỗi ô phủ sóng & LTE            & Có cấp phép              & Băng rộng di động, thoại \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Ưu điểm và hạn chế}
+
+Trong hoạt động thông thường, một trạm (station) liên kết với điểm truy cập
+(access point) và trao đổi các khung dữ liệu qua môi trường vô tuyến dùng chung.
+Mô hình này được sử dụng tại nhà ở, văn phòng, khuôn viên trường học, điểm
+truy cập công cộng và các mạng tạm thời, nơi tính di động hoặc việc tránh đi
+dây cáp mới là yếu tố quan trọng.
+
+\begin{itemize}
+  \item \textbf{Ưu điểm:}
+    \begin{itemize}
+      \item \textbf{Tính di động và tiện lợi:} người dùng duy trì kết nối khi
+        di chuyển giữa các phòng hoặc tòa nhà.
+      \item \textbf{Triển khai nhanh, chi phí thấp:} không cần kéo cáp; phù hợp
+        với địa điểm tạm thời, công trình di sản và nơi tập trung đông người.
+      \item \textbf{Khả năng mở rộng:} có thể tăng dung lượng bằng cách bổ sung
+        \acp{ap} và kênh.
+    \end{itemize}
+  \item \textbf{Hạn chế:}
+    \begin{itemize}
+      \item \textbf{Môi trường truyền dùng chung:} các trạm trong vùng phủ sóng
+        của cùng một kênh phải chia sẻ thời gian chiếm kênh; vì vậy dung lượng
+        thấp hơn và khó dự đoán hơn so với Ethernet chuyển mạch.
+      \item \textbf{Nhiễu và ảnh hưởng truyền sóng:} tường, hiện tượng phản xạ
+        và các thiết bị vô tuyến khác làm suy giảm hiệu năng.
+      \item \textbf{Rủi ro bảo mật:} tín hiệu vô tuyến có thể truyền ra ngoài
+        tòa nhà, vì vậy cần sử dụng cơ chế mã hóa và xác thực mạnh.
+    \end{itemize}
+\end{itemize}
+
+\begin{tomtat}
+\item \acs{wlan} là mạng cục bộ dùng sóng vô tuyến thay cho cáp, hầu hết xây dựng trên họ chuẩn \acs{ieee} 802.11 (định nghĩa lớp \acs{phy} và \acs{mac}).
+\item So với \acs{lan} có dây, \acs{wlan} linh hoạt và dễ triển khai hơn nhưng dùng chung môi trường truyền, nên nhạy với khoảng cách, nhiễu và vật cản.
+\item Về phạm vi, \acs{wlan} nằm giữa \acs{wpan} (khoảng 10~m) và \acs{wwan} (hàng km mỗi ô).
+\item Di động, dễ triển khai nhanh và rẻ, mở rộng bằng cách thêm \acs{ap} và kênh. Nhưng có ít dung lượng để chia sẻ, dễ nhiễu, sóng lan ra diện rộng nên bắt buộc phải có mã hóa và xác thực mạnh.
+\end{tomtat}
+\endgroup
